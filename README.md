@@ -14,21 +14,21 @@ Built to demonstrate clean architecture, authentication, and real-world CRUD wor
 ## Built Using
 
 ### Frontend
-- [React](https://react.dev/) — Frontend framework
-- [React Hooks](https://react.dev/reference/react) — State management (useState, props)
-- [React Router](https://reactrouter.com/) — Routing & navigation
-- [Semantic UI](https://semantic-ui.com/) — UI component library
-- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) — Custom styling
-- [React Toastify](https://fkhadra.github.io/react-toastify/) — Toast notifications
+- [React](https://react.dev/) - Frontend framework
+- [React Hooks](https://react.dev/reference/react) - State management (useState, props)
+- [React Router](https://reactrouter.com/) - Routing & navigation
+- [Semantic UI](https://semantic-ui.com/) - UI component library
+- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) - Custom styling
+- [React Toastify](https://fkhadra.github.io/react-toastify/) - Toast notifications
 
 ### Backend
-- [Node.js](https://nodejs.org/) — Runtime environment for JavaScript
-- [Express](https://expressjs.com/) — Web framework for building REST APIs
-- [PostgreSQL](https://www.postgresql.org/) — Relational database system
-- [Prisma](https://www.prisma.io/) — ORM for database modeling and queries
-- [JSON Web Token (JWT)](https://jwt.io/) — Authentication and authorization
-- [bcrypt](https://www.npmjs.com/package/bcrypt) — Password hashing
-- [dotenv](https://www.npmjs.com/package/dotenv) — Environment variable management
+- [Node.js](https://nodejs.org/) - Runtime environment for JavaScript
+- [Express](https://expressjs.com/) - Web framework for building REST APIs
+- [PostgreSQL](https://www.postgresql.org/) - Relational database system
+- [Prisma](https://www.prisma.io/) - ORM for database modeling and queries
+- [JSON Web Token (JWT)](https://jwt.io/) - Authentication and authorization
+- [bcrypt](https://www.npmjs.com/package/bcrypt) - Password hashing
+- [dotenv](https://www.npmjs.com/package/dotenv) - Environment variable management
 
 
 ### Database
