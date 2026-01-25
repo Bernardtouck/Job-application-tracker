@@ -65,26 +65,7 @@ Built to demonstrate clean architecture, authentication, and real-world CRUD wor
 
 ## Project Structure
 
-```text
-job-application-tracker/
-│
-├── server/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── routes/
-│   │   ├── middleware/
-│   │   └── app.ts
-│   │
-│   ├── prisma/
-│   │   └── schema.prisma
-│   │
-│   ├── package.json
-│   └── tsconfig.json
-│
-├── README.md
-├── .env.example
-└── .gitignore
-```
+![Project Structure](assets/screenshots/project-structure.png)
 
 ---
 
