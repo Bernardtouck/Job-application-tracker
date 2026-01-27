@@ -6,7 +6,7 @@ This project focuses on clean backend architecture, real-world business logic, a
 
 ---
 
-## 🚀 Overview
+## Overview
 
 Managing job applications across multiple platforms can quickly become chaotic.  
 This application centralizes the process by allowing users to:
@@ -19,7 +19,7 @@ The application is designed with a **client–server architecture** and follows 
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - User authentication (register / login)
 - Manual job application tracking
@@ -37,16 +37,16 @@ The application is designed with a **client–server architecture** and follows 
 
 ---
 
-## 📝 Supported Inputs
+## Supported Inputs
 
-- 📋 Copy-paste job posting text
-- 🖼️ Screenshot image upload (PNG / JPG)
+- Copy-paste job posting text
+- Screenshot image upload (PNG / JPG)
 
 > Images are converted to text using OCR before processing.
 
 ---
 
-## 🌍 Supported Languages
+## Supported Languages
 
 - English 🇬🇧
 - German 🇩🇪
@@ -55,7 +55,7 @@ The application is designed with a **client–server architecture** and follows 
 
 ---
 
-## 🔄 Application Workflow
+## Application Workflow
 
 1. User registers or logs in
 2. User submits:
@@ -72,7 +72,7 @@ The application is designed with a **client–server architecture** and follows 
 
 ---
 
-## 🧱 Architecture
+## Architecture
 
 The application follows a **client–server architecture**:
 
@@ -87,7 +87,7 @@ The application follows a **client–server architecture**:
 
 ---
 
-## 🛠️ Built Using
+## Built Using
 
 ### Front-end
 
@@ -117,27 +117,8 @@ The application follows a **client–server architecture**:
 - Custom text parsing — Rule-based extraction for EN / DE job postings
 
 
-## 📁 Project Structure
+## Project Structure
 
-```text
-server/
-│
-├── src/
-│   ├── app.ts
-│   ├── index.ts
-│
-│   ├── routes/          # API routes
-│   ├── controllers/     # Request handling
-│   ├── services/        # Business logic
-│   │   ├── jobParser.service.ts
-│   │   └── ocr.service.ts
-│   ├── middleware/      # Auth & request filtering
-│   ├── lib/             # Prisma & shared utilities
-│   └── utils/           # Text parsing helpers
-│
-├── prisma/
-│   └── schema.prisma
-│
-├── .env.example
-├── package.json
-└── README.md
+Below is a snapshot of the current project structure in VS Code:
+
+![Project Structure](assets/screenshots/project-structure.png)
