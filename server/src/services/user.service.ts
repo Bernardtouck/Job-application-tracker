@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma';
 
 /**
@@ -19,18 +20,23 @@ interface CreateUserInput {
 }
 
 /**
- * Creates a new user.
+ * Creates a new user with a hashed password.
  */
 export const createUser = async (data: CreateUserInput) => {
-  return prisma.user.create({
+  // Hash the password before storing it
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+  // create user with hashed password
+  const user = await prisma.user.create({
     data: {
       email: data.email,
-      password: data.password,
-    },
-    select: {
-      id: true,
-      email: true,
-      createdAt: true,
+      password: hashedPassword,
     },
   });
+  // return user without password
+  return {
+    id: user.id,
+    email: user.email,
+    createdAt: user.createdAt,
+  };
 };
