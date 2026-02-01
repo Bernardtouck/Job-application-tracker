@@ -10,5 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/users', userRoutes);
+app.use('/auth', userRoutes);
 
 export default app;

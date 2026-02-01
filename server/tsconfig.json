@@ -8,7 +8,8 @@
     "strict": true
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/types/**/*.d.ts" // Include custom type definitions
   ],
   "exclude": [
     "node_modules",
