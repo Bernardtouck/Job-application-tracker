@@ -1,18 +1,20 @@
 import { Request, Response } from "express";
-import prisma from "../lib/prisma";
-import { Prisma } from "@prisma/client";
 import Joi from "joi";
+import {
+  createJobService,
+  getJobsService,
+} from "../services/job.service";
 
-// Define TypeScript interface for Request body validation
+// Type pour validation
 interface CreateJobInput {
   company: string;
   position: string;
   status: "APPLIED" | "INTERVIEW" | "OFFER" | "REJECTED";
-  appliedDate: string; // ISO date string
+  appliedDate: string;
   notes?: string;
 }
 
-// Joi schema for validating CreateJobInput
+// Joi validation
 const createJobSchema = Joi.object<CreateJobInput>({
   company: Joi.string().required(),
   position: Joi.string().required(),
@@ -25,15 +27,14 @@ const createJobSchema = Joi.object<CreateJobInput>({
 
 /**
  * GET /jobs
- * Returns all jobs for the authenticated user
+ * Get all jobs for authenticated user
  */
 export const getJobs = async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.userId; // Access userId from authenticated request
-    const jobs = await prisma.job.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+    const userId = req.user!.userId;
+
+    const jobs = await getJobsService(userId);
+
     res.json(jobs);
   } catch (error) {
     console.error(error);
@@ -42,28 +43,23 @@ export const getJobs = async (req: Request, res: Response) => {
 };
 
 /**
- * GET /jobs
- * Returns all jobs for the authenticated user
+ * POST /jobs
+ * Create a new job
  */
 export const createJob = async (req: Request, res: Response) => {
   try {
-    // Validate request body against Joi schema
     const { error, value } = createJobSchema.validate(req.body);
+
     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
+      return res.status(400).json({
+        message: error.details[0].message,
+      });
     }
-    const userId = req.user!.userId; // Access userId from authenticated request
-    const { company, position, status, appliedDate, notes } = value;
-    const job = await prisma.job.create({
-      data: {
-        company,
-        position,
-        status: status || "APPLIED", // Default to APPLIED if not provided
-        appliedAt: appliedDate ? new Date(appliedDate) : new Date(), // Default to current date if not provided
-        notes,
-        userId,
-      },
-    });
+
+    const userId = req.user!.userId;
+
+    const job = await createJobService(value, userId);
+
     res.status(201).json(job);
   } catch (error) {
     console.error(error);
