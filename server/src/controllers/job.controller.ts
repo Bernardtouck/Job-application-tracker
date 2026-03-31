@@ -1,19 +1,9 @@
 import { Request, Response } from "express";
-import prisma from "../lib/prisma";
-import { Prisma } from "@prisma/client";
 import Joi from "joi";
-import { createJobService } from "../services/job.service";
+import { createJobService, getJobsService } from "../services/job.service";
+import { CreateJobInput } from "../types/job.types";
 
-// Define TypeScript interface for Request body validation
-interface CreateJobInput {
-  company: string;
-  position: string;
-  status: "APPLIED" | "INTERVIEW" | "OFFER" | "REJECTED";
-  appliedDate: string; // ISO date string
-  notes?: string;
-}
-
-// Joi schema for validating CreateJobInput
+// Joi schema for creating a job - centralizes validation rules for clarity and reuse
 const createJobSchema = Joi.object<CreateJobInput>({
   company: Joi.string().required(),
   position: Joi.string().required(),
@@ -27,38 +17,34 @@ const createJobSchema = Joi.object<CreateJobInput>({
 /**
  * GET /jobs
  * Returns all jobs for the authenticated user
+ * Protected route → requires JWT authentication
  */
 export const getJobs = async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.userId; // Access userId from authenticated request
-    const jobs = await prisma.job.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+    const jobs = await getJobsService(req.user!.userId);
     res.json(jobs);
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 /**
- * GET /jobs
- * Returns all jobs for the authenticated user
+ * POST /jobs
+ * Creates a new job for the authenticated user
+ * Protected route → requires JWT authentication
  */
 export const createJob = async (req: Request, res: Response) => {
   try {
-    // Validate request body against Joi schema
     const { error, value } = createJobSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
-    const userId = req.user!.userId; // Access userId from authenticated request
-    const { company, position, status, appliedDate, notes } = value;
+
     const job = await createJobService(value, req.user!.userId);
     res.status(201).json(job);
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

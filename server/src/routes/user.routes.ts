@@ -4,7 +4,7 @@ import {
   createUserHandler,
   loginUserHandler,
 } from '../controllers/user.controller';
-import { authenticateJWT } from '../middleware/auth.middleware'; // Import du middleware
+import { authenticateJWT } from '../middleware/auth.middleware'; // Import of the authentication middleware
 
 const router = Router();
 
@@ -12,13 +12,13 @@ const router = Router();
  * GET /users
  * Protected route: Requires authentication
  */
-router.get('/', authenticateJWT, getUsers); // Ajout du middleware ici
+router.get('/', authenticateJWT, getUsers); // Add the authentication middleware here
 
 /**
  * POST /users
  * Protected route: Requires authentication
  */
-router.post('/', authenticateJWT, createUserHandler); // Ajout du middleware ici
+router.post('/', authenticateJWT, createUserHandler); // Add the authentication middleware here
 
 /**
  * POST /auth/login
