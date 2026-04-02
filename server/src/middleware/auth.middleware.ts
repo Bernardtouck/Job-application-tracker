@@ -1,54 +1,53 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-// Define the expected type for `user` directly in the middleware.
-interface UserPayload {
+// Define the expected JWT payload
+export interface UserPayload {
   userId: string;
   email: string;
   iat?: number;
   exp?: number;
 }
 
+// Extend Express Request type to include `user`
+declare global {
+  namespace Express {
+    interface Request {
+      user?: UserPayload;
+    }
+  }
+}
+
 /**
- * Middleware to check and validate the JWT token in the Authorization header.
- * It protects routes that require authentication.
+ * Middleware to validate JWT in the Authorization header.
+ * Protects routes that require authentication.
  */
 export const authenticateJWT = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  // Extract the Authorization header from the request
   const authHeader = req.headers.authorization;
 
-  // If no authorization header is provided, return an error (Access denied)
   if (!authHeader) {
-    return res.status(401).json({ message: 'Access denied' });
+    return res.status(401).json({ message: 'Access denied: No token provided' });
   }
 
-  // Get the token from the Authorization header
-  const token = authHeader.split(' ')[1]; // The token is after 'Bearer'
+  const token = authHeader.split(' ')[1]; // Bearer <token>
 
   try {
-    // Verify the token using jwt.verify() and decode the token
-    // The secret key is stored in an environment variable
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as UserPayload;  // Cast to the specific type of the payload
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload;
 
-    // Attach the decoded user data to the request object (req.user)
-    (req as Request & { user: UserPayload }).user = {
+    // Attach the decoded user info to req.user
+    req.user = {
       userId: decoded.userId,
       email: decoded.email,
-      iat: decoded.iat, // Optional: Can be used if required
-      exp: decoded.exp, // Optional: Can be used if required
+      iat: decoded.iat,
+      exp: decoded.exp,
     };
 
-    // Call next() to pass control to the next middleware or route handler
-    next();
-  } catch (error) {
-    // If the token is invalid or expired, return an error (Forbidden)
+    next(); // Pass control to next middleware/route
+  } catch (err) {
     return res.status(403).json({ message: 'Invalid or expired token' });
   }
 };
