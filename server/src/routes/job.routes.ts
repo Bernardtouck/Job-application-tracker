@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { getJobs, createJob } from '../controllers/job.controller';
+import { getJobs, createJob, updateJob, deleteJob } from '../controllers/job.controller';
 import { authenticateJWT } from '../middleware/auth.middleware'; // Import of the authentication middleware
 
 const router = Router();
@@ -16,5 +16,11 @@ router.get('/', authenticateJWT, getJobs);
  * Protected route → requires JWT authentication
  */
 router.post('/', authenticateJWT, createJob);
+
+// UPDATE
+router.put('/jobs/:id', authenticateJWT, updateJob);
+
+// DELETE
+router.delete('/jobs/:id', authenticateJWT, deleteJob);
 
 export default router;
