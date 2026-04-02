@@ -23,7 +23,8 @@ const createUserSchema = Joi.object({
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await getAllUsers();
-    res.json(users);
+    const safeUsers = users.map(u => ({ id: u.id, email: u.email, createdAt: u.createdAt }));
+    res.json(safeUsers);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
