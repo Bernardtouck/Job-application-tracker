@@ -1,11 +1,9 @@
-import { JwtPayload } from 'jsonwebtoken';
+import { UserPayload } from "../middleware/auth.middleware";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload & { userId: string; email: string; iat?: number; exp?: number };
+      user?: UserPayload; // Add your custom property
     }
   }
 }
-
-export {}; 
