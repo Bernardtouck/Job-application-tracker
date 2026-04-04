@@ -18,9 +18,9 @@ router.get('/', authenticateJWT, getJobs);
 router.post('/', authenticateJWT, createJob);
 
 // UPDATE
-router.put('/jobs/:id', authenticateJWT, updateJob);
+router.put('/:id', authenticateJWT, updateJob);
 
 // DELETE
-router.delete('/jobs/:id', authenticateJWT, deleteJob);
+router.delete('/:id', authenticateJWT, deleteJob);
 
 export default router;
