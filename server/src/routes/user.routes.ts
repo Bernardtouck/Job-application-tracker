@@ -18,7 +18,7 @@ router.get('/', authenticateJWT, getUsers); // Add the authentication middleware
  * POST /users
  * Protected route: Requires authentication
  */
-router.post('/', authenticateJWT, createUserHandler); // Add the authentication middleware here
+router.post('/', createUserHandler); // Add the authentication middleware here
 
 /**
  * POST /auth/login
