@@ -783,3 +783,265 @@ body {
   .form-row { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ─── Header actions ─────────────────────────────────── */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ─── Modal wide variant ─────────────────────────────── */
+.modal-box--wide {
+  max-width: 680px;
+}
+
+/* ─── Parse modal ────────────────────────────────────── */
+.parse-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+
+.parse-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.parse-tab svg { width: 15px; height: 15px; }
+.parse-tab:hover { color: var(--text-primary); }
+.parse-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.parse-body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.parse-textarea {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  padding: 12px 14px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.15s;
+}
+
+.parse-textarea::placeholder { color: var(--text-muted); }
+.parse-textarea:focus { border-color: var(--accent); }
+
+.char-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: -8px;
+}
+
+.label-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ─── Upload area ────────────────────────────────────── */
+.upload-area {
+  border: 2px dashed var(--border-md);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-area:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.upload-placeholder svg { width: 40px; height: 40px; }
+.upload-title { font-size: 14px; color: var(--text-secondary); font-weight: 500; margin: 0; }
+.upload-sub   { font-size: 12px; color: var(--text-muted); margin: 0; }
+
+.upload-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 1.5rem;
+}
+
+.upload-filename { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+.upload-change   { font-size: 11px; color: var(--text-muted); }
+
+/* ─── Parse error ────────────────────────────────────── */
+.parse-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(226,75,74,0.1);
+  border: 1px solid rgba(226,75,74,0.3);
+  color: #f87171;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+/* ─── Parse button ───────────────────────────────────── */
+.parse-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 11px;
+  font-size: 14px;
+}
+
+/* ─── Parse result ───────────────────────────────────── */
+.parse-result {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: fadeUp 0.25s var(--ease-out);
+}
+
+.parse-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.parse-result-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* ─── Confidence bar ─────────────────────────────────── */
+.confidence-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.confidence-bar {
+  width: 100px;
+  height: 5px;
+  background: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s var(--ease-out);
+}
+
+.confidence-label {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ─── Parse fields ───────────────────────────────────── */
+.parse-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.parse-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+.parse-field:nth-child(even) { border-right: none; }
+.parse-field:nth-last-child(-n+2) { border-bottom: none; }
+
+.parse-field-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.parse-field-value {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.parse-field-empty { color: var(--text-muted); font-weight: 400; font-style: italic; }
+
+/* ─── Raw text details ───────────────────────────────── */
+.raw-text-details {
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
+}
+
+.raw-text-details summary {
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.raw-text {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono), monospace;
+  white-space: pre-wrap;
+  max-height: 150px;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+
+/* ─── Parse result actions ───────────────────────────── */
+.parse-result-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
