@@ -10,7 +10,9 @@ export interface Job {
   appliedAt: string;
   notes?: string;
   location?: string;  
-  salary?: string;    
+  salary?: string;
+  contractType?: string;
+  workMode?:    string;    
   userId: string;
   createdAt: string;
   updatedAt?: string;
@@ -23,4 +25,6 @@ export interface JobPayload {
   notes?: string;
   location?: string;
   salary?: string;
+  contractType?: string;
+  workMode?:    string;
 }
