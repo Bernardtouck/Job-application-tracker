@@ -1,3 +1,5 @@
+// src/types/job.types.ts
+
 export type JobStatus = "APPLIED" | "INTERVIEW" | "OFFER" | "REJECTED";
 
 export interface Job {
@@ -7,6 +9,18 @@ export interface Job {
   status: JobStatus;
   appliedAt: string;
   notes?: string;
+  location?: string;  
+  salary?: string;    
   userId: string;
   createdAt: string;
+  updatedAt?: string;
+}
+
+export interface JobPayload {
+  company: string;
+  position: string;
+  status: JobStatus;
+  notes?: string;
+  location?: string;
+  salary?: string;
 }
