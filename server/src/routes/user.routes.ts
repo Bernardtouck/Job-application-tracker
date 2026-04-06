@@ -16,13 +16,15 @@ router.get('/', authenticateJWT, getUsers); // Add the authentication middleware
 
 /**
  * POST /users
- * Protected route: Requires authentication
+ * Register a new user
+ * Public route — no authentication required
  */
 router.post('/', createUserHandler); // Add the authentication middleware here
 
 /**
  * POST /auth/login
  * Authenticates a user and returns a JWT
+ * Public route — no authentication required
  */
 router.post('/login', loginUserHandler);
 
