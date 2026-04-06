@@ -76,7 +76,7 @@ export const parseImage = async (req: Request, res: Response) => {
     const rawText = await extractTextFromImage(req.file.buffer);
 
     // Step 2: Parse the extracted text
-    const parsed = parseJobText(rawText);
+    const parsed = parseJobText(rawText, true); // isOcr = true to enable OCR-specific cleaning/preprocessing
 
     return res.status(200).json({
       success: true,
