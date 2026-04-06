@@ -21,6 +21,8 @@ const createJobSchema = Joi.object<CreateJobInput>({
   notes: Joi.string().optional().allow(''),
   location: Joi.string().optional().allow(''),
   salary: Joi.string().optional().allow(''),
+  contractType: Joi.string().optional().allow(''),
+  workMode: Joi.string().optional().allow(''),
 });
 
 /**
@@ -36,6 +38,8 @@ const updateJobSchema = Joi.object<UpdateJobInput>({
   notes: Joi.string().optional().allow(''),
   location: Joi.string().optional().allow(''),
   salary: Joi.string().optional().allow(''),
+  contractType: Joi.string().optional().allow(''),
+  workMode: Joi.string().optional().allow(''),
 });
 
 /**
