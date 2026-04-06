@@ -10,11 +10,7 @@ const router = Router();
  */
 router.get('/', authenticateJWT, getJobs);
 
-/**
- * GET /jobs
- * Returns all jobs for the authenticated user
- * Protected route → requires JWT authentication
- */
+// CREATE
 router.post('/', authenticateJWT, createJob);
 
 // UPDATE
