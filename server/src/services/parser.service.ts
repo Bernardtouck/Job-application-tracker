@@ -11,7 +11,7 @@ import {
   FieldConfidence,
   RawParseResult,
   ParsedJob,
-} from '../types/parser.types';
+} from "../types/parser.types";
 
 // ═══════════════════════════════════════════════════════════
 // LANGUAGE DETECTION
@@ -46,13 +46,59 @@ export function detectLanguage(text: string): SupportedLanguage {
 // TEXT PREPROCESSING
 // ═══════════════════════════════════════════════════════════
 
+// Major German cities for direct OCR location detection
+export const DE_CITIES = [
+  "Berlin","Hamburg","München","Munich","Köln","Cologne","Frankfurt",
+  "Stuttgart","Düsseldorf","Dortmund","Essen","Leipzig","Bremen",
+  "Dresden","Hannover","Nürnberg","Nuremberg","Duisburg","Bochum",
+  "Wuppertal","Bielefeld","Bonn","Münster","Karlsruhe","Mannheim",
+  "Augsburg","Wiesbaden","Gelsenkirchen","Mönchengladbach","Braunschweig",
+  "Kiel","Chemnitz","Aachen","Halle","Magdeburg","Freiburg","Krefeld",
+  "Lübeck","Oberhausen","Erfurt","Mainz","Rostock","Kassel","Hagen",
+  "Hamm","Saarbrücken","Mülheim","Potsdam","Ludwigshafen","Oldenburg",
+  "Leverkusen","Osnabrück","Solingen","Heidelberg","Herne","Neuss",
+  "Darmstadt","Paderborn","Regensburg","Ingolstadt","Würzburg","Fürth",
+  "Wolfsburg","Offenbach","Ulm","Heilbronn","Pforzheim","Göttingen",
+  "Bottrop","Tübingen","Recklinghausen","Reutlingen","Bremerhaven",
+  "Koblenz","Bergisch","Jena","Remscheid","Erlangen","Moers","Siegen",
+  "Hildesheim","Salzgitter","Cottbus",
+];
+
+/**
+ * Clean OCR artifacts from raw Tesseract output.
+ * Tesseract often converts icons/logos into special characters
+ * like ©, ®, ™, □, ■ which pollute the extracted text.
+ */
+export function cleanOcrArtifacts(raw: string): string {
+  return raw
+    // Remove common OCR icon substitutions
+    .replace(/[©®™°•·§¶†‡]/g, " ")
+    // Remove box-drawing and block characters (icon remnants)
+    .replace(/[\u2500-\u257F\u2580-\u259F\u25A0-\u25FF]/g, " ")
+    // Remove other common OCR noise characters
+    .replace(/[\uFFFD\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, " ")
+    // Remove isolated single non-alphanumeric chars (often icon OCR noise)
+    .replace(/(^|\n|\s)[^\w\säöüÄÖÜß\n.,;:!?€$£%\-\/()]{1}(\s|$)/g, " ")
+    // Collapse multiple spaces created by removals
+    .replace(/ {2,}/g, " ")
+    .trim();
+}
+
 export function preprocessText(raw: string): string {
   return raw
-    .replace(/\r\n/g, "\n")       // normalize line endings
-    .replace(/\t/g, " ")          // tabs → spaces
-    .replace(/ {2,}/g, " ")       // collapse multiple spaces
-    .replace(/\n{3,}/g, "\n\n")   // max 2 consecutive newlines
+    .replace(/\r\n/g, "\n")
+    .replace(/\t/g, " ")
+    .replace(/ {2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+/**
+ * Full pipeline: clean OCR artifacts then preprocess.
+ * Used when input comes from Tesseract (image mode).
+ */
+export function preprocessOcrText(raw: string): string {
+  return preprocessText(cleanOcrArtifacts(raw));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -146,20 +192,40 @@ function extractCompany(text: string, lang: SupportedLanguage): FieldConfidence 
 // ═══════════════════════════════════════════════════════════
 
 const LOCATION_PATTERNS_EN = [
-  { re: /(?:location|office|based in|based at|city)\s*[:\-–]\s*(.+?)(?:\n|,\s*[A-Z]{2}|$)/i, score: 0.95 },
-  { re: /(?:remote|hybrid|on-?site)\s*[–\-\|]\s*(.+?)(?:\n|$)/i,                              score: 0.80 },
-  { re: /(?:in|at)\s+([A-Z][a-zA-Z\s\-]{2,30}),?\s+(?:Germany|Deutschland|Austria|Switzerland|UK|US)/i, score: 0.88 },
+  { re: /(?:location|office|based in|based at|city)\s*[:\-–]\s*([A-Za-z][a-zA-Z\s\-]{1,30}?)(?:[.,\n]|$)/i, score: 0.95 },
+  { re: /(?:in|at)\s+([A-Z][a-zA-Z\s\-]{2,25}),?\s+(?:Germany|Deutschland|Austria|Switzerland|UK|US)/i,       score: 0.90 },
+  { re: /Location\s*[:\-–]\s*([A-Za-z][a-zA-Z\s\-,]{2,40}?)(?:[.\n]|$)/i,                                   score: 0.92 },
 ];
 
 const LOCATION_PATTERNS_DE = [
-  { re: /(?:standort|ort|arbeitsort|einsatzort)\s*[:\-–]\s*(.+?)(?:\n|$)/i,  score: 0.95 },
+  { re: /(?:standort|ort|arbeitsort|einsatzort)\s*[:\-–]\s*([A-ZÄÖÜa-zäöüß][a-zA-ZäöüÄÖÜß\s\-]{1,30}?)(?:[.,\n]|$)/i, score: 0.95 },
+  { re: /\b(\d{5})\s+([A-ZÄÖÜ][a-zA-ZäöüÄÖÜß\-]{2,20})/i,                   score: 0.92 },
+  { re: /([A-ZÄÖÜ][a-zA-ZäöüÄÖÜß\-]{2,20})\s+(\d{5})\b/i,                   score: 0.90 },
   { re: /\bin\s+([A-ZÄÖÜ][a-zA-ZäöüÄÖÜß\-]{2,20})(?:[.,\s]|$)/i,            score: 0.82 },
   { re: /(?:bei|für)\s+.+?\s+in\s+([A-ZÄÖÜ][a-zA-ZäöüÄÖÜß\-]{2,20})(?:[.,\s]|$)/i, score: 0.85 },
-  { re: /\b(\d{5})\s+([A-ZÄÖÜ][a-zA-ZäöüÄÖÜß\-]{2,20})/i,                   score: 0.88 },
-  { re: /([A-ZÄÖÜ][a-zA-ZäöüÄÖÜß\-]{2,20})\s+(\d{5})\b/i,                   score: 0.85 },
 ];
 
-function extractLocation(text: string, lang: SupportedLanguage): FieldConfidence {
+/**
+ * OCR fallback: scan for known German city names directly in the text.
+ * Handles cases where city appears after an icon (\u00a9, \u00ae, box) with no keyword.
+ * e.g. OCR output: "\u00a9 SoftConEx GmbH \u00a9 Berlin \u00a9 Feste Anstellung"
+ */
+function extractCityFromOcr(text: string): FieldConfidence {
+  const lower = text.toLowerCase();
+  for (const city of DE_CITIES) {
+    const cityLower = city.toLowerCase();
+    const escaped = cityLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const wordBoundary = new RegExp(
+      `(^|[\\s,;|\u00a9\u00ae\-])(${escaped})([\\s,;|.\u00a9\u00ae\-]|$)`
+    );
+    if (wordBoundary.test(lower)) {
+      return { value: city, confidence: 0.72, source: "city-list-ocr-fallback" };
+    }
+  }
+  return { value: null, confidence: 0, source: "no-match" };
+}
+
+function extractLocation(text: string, lang: SupportedLanguage, isOcr = false): FieldConfidence {
   const patterns = lang === "de" ? LOCATION_PATTERNS_DE : LOCATION_PATTERNS_EN;
   for (const { re, score } of patterns) {
     const match = text.match(re);
@@ -171,6 +237,10 @@ function extractLocation(text: string, lang: SupportedLanguage): FieldConfidence
       if (value.length < 2 || value.length > 60) continue;
       return { value, confidence: score, source: re.source };
     }
+  }
+  // OCR fallback: scan for known German cities (handles icon-separated layouts)
+  if (isOcr && lang === "de") {
+    return extractCityFromOcr(text);
   }
   return { value: null, confidence: 0, source: "no-match" };
 }
@@ -308,16 +378,18 @@ function computeOverallConfidence(result: RawParseResult): number {
 
 /**
  * Parse a raw job posting text (EN or DE) and extract structured data.
- * Returns a ParsedJob with confidence scores.
+ * @param rawText - The raw text to parse
+ * @param isOcr   - Set to true when text comes from Tesseract OCR
+ *                  Enables OCR-specific cleaning and city list fallback
  */
-export function parseJobText(rawText: string): ParsedJob {
-  const text      = preprocessText(rawText);
+export function parseJobText(rawText: string, isOcr = false): ParsedJob {
+  const text      = isOcr ? preprocessOcrText(rawText) : preprocessText(rawText);
   const language  = detectLanguage(text);
 
   const raw: RawParseResult = {
     title:        extractTitle(text, language),
     company:      extractCompany(text, language),
-    location:     extractLocation(text, language),
+    location:     extractLocation(text, language, isOcr),
     salary:       extractSalary(text, language),
     contractType: extractContractType(text),
     workMode:     extractWorkMode(text),
