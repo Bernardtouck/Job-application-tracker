@@ -5,14 +5,18 @@ export interface CreateJobInput {
   company: string;
   position: string;
   status: JobStatus;
-  appliedDate: string; // ISO string
-  notes?: string;
+  appliedAt: string; // ISO string
+  notes?: string,
+  location?: string;
+  salary?: string;
 }
 
 export interface UpdateJobInput {
   company?: string;
   position?: string;
   status?: JobStatus;
-  appliedDate?: string;
-  notes?: string;
+  appliedAt?: string;
+  notes?: string,
+  location?: string;
+  salary?: string;
 }
