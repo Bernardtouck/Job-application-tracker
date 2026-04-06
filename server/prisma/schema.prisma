@@ -23,11 +23,15 @@ model Job {
   status    JobStatus
   appliedAt DateTime
   notes     String?
+  location  String?
+  salary    String?
 
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
+  
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 enum JobStatus {
