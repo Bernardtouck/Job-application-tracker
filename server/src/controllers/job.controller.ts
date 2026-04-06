@@ -17,8 +17,10 @@ const createJobSchema = Joi.object<CreateJobInput>({
   status: Joi.string()
     .valid("APPLIED", "INTERVIEW", "OFFER", "REJECTED")
     .required(),
-  appliedDate: Joi.string().isoDate().required(),
-  notes: Joi.string().optional(),
+  appliedAt: Joi.string().isoDate().optional,
+  notes: Joi.string().optional().allow(''),
+  location: Joi.string().optional().allow(''),
+  salary: Joi.string().optional().allow(''),
 });
 
 /**
@@ -30,8 +32,10 @@ const updateJobSchema = Joi.object<UpdateJobInput>({
   status: Joi.string()
     .valid("APPLIED", "INTERVIEW", "OFFER", "REJECTED")
     .optional(),
-  appliedDate: Joi.string().isoDate().optional(),
-  notes: Joi.string().optional(),
+  appliedAt: Joi.string().isoDate().optional(),
+  notes: Joi.string().optional().allow(''),
+  location: Joi.string().optional().allow(''),
+  salary: Joi.string().optional().allow(''),
 });
 
 /**
