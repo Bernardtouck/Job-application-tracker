@@ -17,8 +17,10 @@ export const createJobService = async (
       company: data.company,
       position: data.position,
       status: data.status,
-      appliedAt: new Date(data.appliedDate),
+      appliedAt: data.appliedAt ? new Date(data.appliedAt) : new Date(),
       notes: data.notes,
+      location: data.location,
+      salary: data.salary,
       userId,
     },
   });
@@ -63,7 +65,7 @@ export const updateJobService = async (
     where: { id: jobId },
     data: {
       ...data,
-      appliedAt: data.appliedDate ? new Date(data.appliedDate) : undefined,
+      appliedAt: data.appliedAt ? new Date(data.appliedAt) : undefined,
     },
   });
 };
