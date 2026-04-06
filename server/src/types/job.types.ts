@@ -9,6 +9,8 @@ export interface CreateJobInput {
   notes?: string,
   location?: string;
   salary?: string;
+  contractType?: string;  
+  workMode?:    string;
 }
 
 export interface UpdateJobInput {
@@ -19,4 +21,6 @@ export interface UpdateJobInput {
   notes?: string,
   location?: string;
   salary?: string;
+  contractType?: string;
+  workMode?:    string;
 }
