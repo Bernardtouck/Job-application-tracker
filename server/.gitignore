@@ -29,3 +29,7 @@ Thumbs.db
 
 # Coverage
 coverage/
+
+
+# Tesseract language models (downloaded automatically at runtime)
+*.traineddata
