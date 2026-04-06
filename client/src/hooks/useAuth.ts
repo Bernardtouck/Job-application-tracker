@@ -1,30 +1,19 @@
-// src/hooks/useAuth.ts
-
-import { useState } from "react";
-import {
-  setToken,
-  removeToken,
-  isAuthenticated,
-} from "../services/auth";
+import { useState, useCallback } from "react";
+import { setToken, removeToken, isAuthenticated } from "../services/auth";
 
 export const useAuth = () => {
-  const [isAuth, setIsAuth] = useState<boolean>(isAuthenticated());
+  // Re-evaluate on every render so expiry is always fresh
+  const [isAuth, setIsAuth] = useState<boolean>(isAuthenticated);
 
-  // login
-  const login = (token: string) => {
+  const login = useCallback((token: string) => {
     setToken(token);
     setIsAuth(true);
-  };
+  }, []);
 
-  // logout
-  const logout = () => {
+  const logout = useCallback(() => {
     removeToken();
     setIsAuth(false);
-  };
+  }, []);
 
-  return {
-    isAuth,
-    login,
-    logout,
-  };
+  return { isAuth, login, logout };
 };
