@@ -1,6 +1,7 @@
 // src/pages/Login.tsx
 
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -22,7 +23,7 @@ export default function Login() {
     if (isAuthenticated()) navigate("/dashboard", { replace: true });
   }, [navigate]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Email and password are required");
@@ -174,9 +175,9 @@ export default function Login() {
 
           <p className="login-footer-text">
             No account yet?{" "}
-            <a href="#" className="login-link">
-              Create one
-            </a>
+            <Link to="/register" className="login-link">
+              Create an account
+            </Link>
           </p>
         </div>
       </div>
