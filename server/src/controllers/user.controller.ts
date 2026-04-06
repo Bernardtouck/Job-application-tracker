@@ -98,7 +98,7 @@ export const loginUserHandler = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET!,  // the secret key for signing the token
-      { expiresIn: '1h' }       // Expiration of the token in 1 hour
+      { expiresIn: '7d' }       // Expiration of the token in seven days
     );
 
     // return the token
