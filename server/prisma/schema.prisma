@@ -25,6 +25,8 @@ model Job {
   notes     String?
   location  String?
   salary    String?
+  contractType String? 
+  workMode     String?  
 
   userId    String
   user      User     @relation(fields: [userId], references: [id])
