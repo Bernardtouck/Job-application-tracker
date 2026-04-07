@@ -3,6 +3,8 @@ import {
   getUsers,
   createUserHandler,
   loginUserHandler,
+  getProfile,
+  updateProfile,
 } from '../controllers/user.controller';
 import { authenticateJWT } from '../middleware/auth.middleware'; // Import of the authentication middleware
 
@@ -27,5 +29,17 @@ router.post('/', createUserHandler); // Add the authentication middleware here
  * Public route — no authentication required
  */
 router.post('/login', loginUserHandler);
+/**
+ * GET /users/profile
+ * Authenticates the user and returns their profile
+ * Protected route: Requires authentication
+ */
+router.get("/profile", authenticateJWT, getProfile);
+/**
+ * PUT /users/profile
+ * Updates the authenticated user's profile (username and/or avatar)
+ * Protected route: Requires authentication
+ */
+router.put("/profile", authenticateJWT, updateProfile);
 
 export default router;
