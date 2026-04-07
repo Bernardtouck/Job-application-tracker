@@ -8,10 +8,12 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String
+  username      String?
+  avatarBase64  String?  // base64 encoded profile picture
+  createdAt     DateTime @default(now())
 
   jobs Job[]
 }
