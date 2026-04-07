@@ -10,7 +10,7 @@
   "include": [
     "src/**/*.ts",
     "src/types/**/*.d.ts" // Include custom type definitions
-  ],
+, "../client/src/types/user.types.ts"  ],
   "exclude": [
     "node_modules",
     "prisma.config.ts"
