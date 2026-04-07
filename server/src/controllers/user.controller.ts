@@ -1,111 +1,97 @@
-import { Request, Response } from 'express';
-import { getAllUsers, createUser } from '../services/user.service';
-import { Prisma } from '@prisma/client';
-import prisma from '../lib/prisma';
-import Joi from 'joi';
-import { compare} from 'bcrypt'; // compare bcrypt hash
-import jwt from 'jsonwebtoken'; // JWT for token generation
+import { Request, Response } from "express";
+import { getAllUsers, createUser, getUserProfile, updateUserProfile } from "../services/user.service";
+import { Prisma } from "@prisma/client";
+import prisma from "../lib/prisma";
+import Joi from "joi";
+import { compare } from "bcrypt";
+import jwt from "jsonwebtoken";
 
-
-/**
- * Joi schema for creating a user
- * Centralizes validation rules for reuse & clarity
- */
+// ── Validation schemas ───────────────────────────────────
 const createUserSchema = Joi.object({
-  email: Joi.string().email().required(),
+  email:    Joi.string().email().required(),
   password: Joi.string().min(6).required(),
 });
+// For profile updates, at least one field must be provided
+const updateProfileSchema = Joi.object({
+  username:     Joi.string().min(2).max(32).optional().allow(""),
+  avatarBase64: Joi.string().optional().allow(""),
+}).min(1);
 
-/**
- * GET /users
- * Returns all users without passwords
- */
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await getAllUsers();
-    const safeUsers = users.map(u => ({ id: u.id, email: u.email, createdAt: u.createdAt }));
-    res.json(safeUsers);
+    res.json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-/**
- * POST /users
- * Creates a new user
- */
 export const createUserHandler = async (req: Request, res: Response) => {
   try {
-    // Validate request body
     const { error, value } = createUserSchema.validate(req.body);
-
-    if (error) {
-      return res.status(400).json({
-        message: error.details[0].message,
-      });
-    }
-    // Destructure validated values
-    const { email, password } = value;
-
-    const user = await createUser({ email, password });
-
+    if (error) return res.status(400).json({ message: error.details[0].message });
+    const user = await createUser({ email: value.email, password: value.password });
     res.status(201).json(user);
   } catch (error) {
-    // Handle unique constraint error (email already exists)
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002'
-    ) {
-      return res.status(400).json({ message: 'Email already exists' });
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return res.status(400).json({ message: "Email already exists" });
     }
-    // Generic error handling
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-/**
- * POST /auth/login
- * Authenticates a user and returns a JWT if successful
- */
 export const loginUserHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-
-  // basic validation
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
-  }
-
+  if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
   try {
-    // find user by email
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    // If user not found
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-
-    // compare password with hashed password
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(401).json({ message: "Invalid email or password" });
     const passwordMatch = await compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-
-    // generate JWT for authenticated user
+    if (!passwordMatch) return res.status(401).json({ message: "Invalid email or password" });
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      process.env.JWT_SECRET!,  // the secret key for signing the token
-      { expiresIn: '7d' }       // Expiration of the token in seven days
+      process.env.JWT_SECRET!,
+      { expiresIn: "7d" }
     );
-
-    // return the token
-    res.json({ token });
-
+    res.json({
+      token,
+      user: {
+        id:           user.id,
+        email:        user.email,
+        username:     user.username,
+        avatarBase64: user.avatarBase64,
+      },
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getProfile = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+    const profile = await getUserProfile(req.user.userId);
+    if (!profile) return res.status(404).json({ message: "User not found" });
+    res.json(profile);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+    const { error, value } = updateProfileSchema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
+    const updated = await updateUserProfile(req.user.userId, value);
+    res.json(updated);
+  } catch (err: any) {
+    console.error(err);
+    if (err.message?.includes("too large")) return res.status(413).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
