@@ -1,4 +1,3 @@
-// src/pages/Dashboard.tsx
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
@@ -6,6 +5,8 @@ import { parseJobText, parseJobImage } from "../api/parser.api";
 import { useAuth } from "../hooks/useAuth";
 import type { Job, JobStatus } from "../types/job.types";
 import type { ParsedJob } from "../types/parser.types";
+import type { UserProfile } from "../types/user.types";
+import ProfileModal from "../components/ProfileModal";
 import "./Dashboard.css";
 
 interface JobFormData {
@@ -268,7 +269,13 @@ export default function Dashboard() {
   const [loading, setLoading]       = useState(true);
   const [saving, setSaving]         = useState(false);
   const [showCreate, setShowCreate] = useState(false);
-  const [showParse, setShowParse]   = useState(false);
+  const [showParse, setShowParse]     = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [isFirstLogin, setIsFirstLogin] = useState(false);
+  const [profile, setProfile]         = useState<UserProfile | null>(() => {
+    try { return JSON.parse(localStorage.getItem("userProfile") || "null"); }
+    catch { return null; }
+  });
   const [editJob, setEditJob]       = useState<Job | null>(null);
   const [deleteJob, setDeleteJob]   = useState<Job | null>(null);
   const [createForm, setCreateForm] = useState<JobFormData>(EMPTY_FORM);
@@ -282,6 +289,14 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => { fetchJobs(); }, [fetchJobs]);
+
+  // Show profile modal automatically on first login (no username set)
+  useEffect(() => {
+    if (profile && !profile.username) {
+      setIsFirstLogin(true);
+      setShowProfile(true);
+    }
+  }, []);
 
   const handleCreate = async (data: JobFormData) => {
     try { setSaving(true); await API.post("/jobs", data); setShowCreate(false); setCreateForm(EMPTY_FORM); fetchJobs(); }
@@ -323,6 +338,12 @@ export default function Dashboard() {
     return matchStatus && (!q || j.company.toLowerCase().includes(q) || j.position.toLowerCase().includes(q));
   });
 
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("userProfile");
+    navigate("/");
+  };
+
   const stats = {
     total:      jobs.length,
     interviews: jobs.filter((j) => j.status === "INTERVIEW").length,
@@ -352,11 +373,22 @@ export default function Dashboard() {
           <a className="nav-item" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>Analytics</a>
         </nav>
         <div className="sidebar-footer">
-          <div className="user-info">
-            <div className="user-avatar">JD</div>
-            <div className="user-details"><span className="user-name">Job Hunter</span><span className="user-sub">Spring 2026</span></div>
+          <div className="user-info" onClick={() => { setIsFirstLogin(false); setShowProfile(true); }} style={{ cursor: "pointer", flex: 1 }} title="Edit profile">
+            <div className="sidebar-avatar">
+              {profile?.avatarBase64 ? (
+                <img src={profile.avatarBase64} alt="avatar" />
+              ) : (
+                <span className="sidebar-avatar-initials">
+                  {profile?.username ? profile.username.slice(0, 2).toUpperCase() : profile?.email?.slice(0, 2).toUpperCase() ?? "?"}
+                </span>
+              )}
+            </div>
+            <div className="user-details">
+              <span className="user-name">{profile?.username || "Set username"}</span>
+              <span className="user-sub">{profile?.email ?? ""}</span>
+            </div>
           </div>
-          <button className="logout-btn" onClick={() => { logout(); navigate("/"); }} title="Logout">
+          <button className="logout-btn" onClick={handleLogout} title="Logout">
             <svg viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" /></svg>
           </button>
         </div>
@@ -469,6 +501,13 @@ export default function Dashboard() {
         </div>
       </main>
 
+      {showProfile && (
+        <ProfileModal
+          isFirstLogin={isFirstLogin}
+          onClose={() => { setShowProfile(false); setIsFirstLogin(false); }}
+          onUpdated={(p) => { setProfile(p); setShowProfile(false); setIsFirstLogin(false); }}
+        />
+      )}
       {showParse && <Modal title="Smart job parsing" onClose={() => setShowParse(false)} wide><ParseJobModal onParsed={handleParsed} onClose={() => setShowParse(false)} /></Modal>}
       {showCreate && <Modal title="Add new application" onClose={() => { setShowCreate(false); setCreateForm(EMPTY_FORM); }}><JobForm initial={createForm} onSubmit={handleCreate} onCancel={() => { setShowCreate(false); setCreateForm(EMPTY_FORM); }} loading={saving} /></Modal>}
       {editJob && <Modal title="Edit application" onClose={() => setEditJob(null)}><JobForm initial={{ company: editJob.company, position: editJob.position, status: editJob.status as JobStatus, notes: editJob.notes || "", location: editJob.location || "", salary: editJob.salary || "", contractType: editJob.contractType || "", workMode: editJob.workMode || "" }} onSubmit={handleUpdate} onCancel={() => setEditJob(null)} loading={saving} /></Modal>}
