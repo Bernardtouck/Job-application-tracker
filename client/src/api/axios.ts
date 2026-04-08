@@ -26,9 +26,9 @@ API.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       removeToken();
-      // Guard: don't redirect if already on login page (avoids infinite redirect loop)
-      if (window.location.pathname !== "/") {
-        window.location.href = "/";
+      // Redirect to login if not already there
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);
