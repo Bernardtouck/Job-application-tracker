@@ -2,7 +2,7 @@
 // Bilingual landing page EN ↔ DE with 3D card flip transition
 // Design: Organic dark with warm amber accents, Bricolage Grotesque + DM Sans
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 
@@ -26,6 +26,11 @@ const CONTENT = {
     role: "Computer Science Student · Web Dev & AI Enthusiast",
     story: "I built JobTracker because tracking job applications across 5 different platforms in spreadsheets was chaos. As a passionate developer always chasing new discoveries in web development and artificial intelligence, I wanted a smarter tool — so I built one. It's my most complete fullstack project to date.",
     stack: "React · TypeScript · Node.js · Express · Prisma · PostgreSQL · Tesseract OCR",
+    ticker: [
+      "📊 Track every application in one place",
+      "🎯 Stop losing track of your job hunt",
+      "🔒 Your data, your applications, your future",
+    ],
   },
   de: {
     lang: "DE",
@@ -45,8 +50,48 @@ const CONTENT = {
     role: "Informatikstudent · Web-Entwicklung & KI-Enthusiast",
     story: "Ich habe JobTracker entwickelt, weil das Verwalten von Bewerbungen über 5 verschiedene Plattformen in Tabellenkalkulationen chaotisch war. Als leidenschaftlicher Entwickler, der immer neuen Entdeckungen in der Webentwicklung und künstlichen Intelligenz nachjagt, wollte ich ein intelligenteres Tool — also habe ich eines gebaut. Es ist mein bisher umfangreichstes Fullstack-Projekt.",
     stack: "React · TypeScript · Node.js · Express · Prisma · PostgreSQL · Tesseract OCR",
+    ticker: [
+      "📊 Alle Bewerbungen an einem Ort verwalten",
+      "🎯 Behalte den Überblick über deine Jobsuche",
+      "🔒 Deine Daten, deine Bewerbungen, deine Zukunft",
+    ],
   },
 };
+
+function LiveClock() {
+  const [time, setTime] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    <span className="ticker-clock">
+      {pad(time.getHours())}:{pad(time.getMinutes())}:{pad(time.getSeconds())}
+    </span>
+  );
+}
+
+function TickerStrip({ messages }: { messages: string[] }) {
+  const items = [...messages, ...messages, ...messages];
+  return (
+    <div className="ticker-wrap">
+      <div className="ticker-inner">
+        <LiveClock />
+        <div className="ticker-track">
+          <div className="ticker-slide">
+            {items.map((msg, i) => (
+              <span key={i} className="ticker-item">
+                {msg}
+                <span className="ticker-sep">·</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ─── Logo SVG ─────────────────────────────────────────────
 function Logo() {
@@ -54,15 +99,15 @@ function Logo() {
     <div className="lp-logo">
       <svg viewBox="0 0 40 40" fill="none" className="lp-logo-icon">
         {/* Briefcase shape */}
-        <rect x="4" y="14" width="32" height="22" rx="4" fill="#F5A623" opacity="0.15" stroke="#F5A623" strokeWidth="1.5"/>
-        <path d="M14 14V11a2 2 0 012-2h8a2 2 0 012 2v3" stroke="#F5A623" strokeWidth="1.5" strokeLinecap="round"/>
+        <rect x="4" y="14" width="32" height="22" rx="4" fill="#F5A623" opacity="0.15" stroke="#F5A623" strokeWidth="1.5" />
+        <path d="M14 14V11a2 2 0 012-2h8a2 2 0 012 2v3" stroke="#F5A623" strokeWidth="1.5" strokeLinecap="round" />
         {/* Circuit lines — tech element */}
-        <line x1="4" y1="22" x2="36" y2="22" stroke="#F5A623" strokeWidth="1" opacity="0.4"/>
-        <circle cx="20" cy="22" r="2.5" fill="#F5A623"/>
-        <line x1="20" y1="22" x2="20" y2="28" stroke="#F5A623" strokeWidth="1" opacity="0.5"/>
-        <circle cx="14" cy="28" r="1.5" fill="#F5A623" opacity="0.6"/>
-        <circle cx="26" cy="28" r="1.5" fill="#F5A623" opacity="0.6"/>
-        <line x1="14" y1="28" x2="26" y2="28" stroke="#F5A623" strokeWidth="1" opacity="0.4"/>
+        <line x1="4" y1="22" x2="36" y2="22" stroke="#F5A623" strokeWidth="1" opacity="0.4" />
+        <circle cx="20" cy="22" r="2.5" fill="#F5A623" />
+        <line x1="20" y1="22" x2="20" y2="28" stroke="#F5A623" strokeWidth="1" opacity="0.5" />
+        <circle cx="14" cy="28" r="1.5" fill="#F5A623" opacity="0.6" />
+        <circle cx="26" cy="28" r="1.5" fill="#F5A623" opacity="0.6" />
+        <line x1="14" y1="28" x2="26" y2="28" stroke="#F5A623" strokeWidth="1" opacity="0.4" />
       </svg>
       <span className="lp-logo-text">Job<span>Tracker</span></span>
     </div>
@@ -102,6 +147,8 @@ function CardSide({ content, onFlip, onLogin, onRegister }: {
           </button>
         </div>
       </nav>
+
+      <TickerStrip messages={content.ticker} />
 
       {/* Hero */}
       <section className="lp-hero">
@@ -184,7 +231,7 @@ function CardSide({ content, onFlip, onLogin, onRegister }: {
 // ─── Main component ───────────────────────────────────────
 export default function LandingPage() {
   const navigate = useNavigate();
-  const [lang, setLang]       = useState<"en" | "de">("en");
+  const [lang, setLang] = useState<"en" | "de">("en");
   const [flipping, setFlipping] = useState(false);
   const [showBack, setShowBack] = useState(false);
 
@@ -208,7 +255,7 @@ export default function LandingPage() {
           <CardSide
             content={content}
             onFlip={handleFlip}
-            onLogin={() => navigate("/")}
+            onLogin={() => navigate("/login")}
             onRegister={() => navigate("/register")}
           />
         </div>
