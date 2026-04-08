@@ -6,6 +6,12 @@ This project focuses on clean backend architecture, real-world business logic, a
 
 ---
 
+## Demo
+
+![Dashboard Preview](assets/screenshots/dashboard-preview.png)
+ 
+---
+
 ## Overview
 
 Managing job applications across multiple platforms can quickly become chaotic.  
