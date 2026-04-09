@@ -1,34 +1,36 @@
 /* ═══════════════════════════════════════════════════════════
-   Dashboard.css — JobFlow Premium SaaS UI
-   Font: Outfit (display) + system mono for meta
-   Palette: Slate-950 base · Electric blue accent
+   Dashboard.css — JobTracker
+   Font: Bricolage Grotesque (display) + DM Sans (body)
+   Palette: Organic dark · Warm amber accent
+   Matches LandingPage & AuthPage design system
    ═══════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ─── Tokens ─────────────────────────────────────────── */
+/* ─── Tokens — unified with LandingPage ─────────────── */
 :root {
-  --bg-base:     #080c14;
-  --bg-surface:  #0d1421;
-  --bg-elevated: #111827;
-  --bg-hover:    #1a2235;
-  --bg-active:   #1e2a40;
+  --bg-base:     #0a0805;
+  --bg-surface:  #110f0a;
+  --bg-elevated: #1a1610;
+  --bg-hover:    #201c15;
+  --bg-active:   #26201a;
 
-  --border:      rgba(255,255,255,0.07);
-  --border-md:   rgba(255,255,255,0.12);
+  --border:      rgba(245,166,35,0.08);
+  --border-md:   rgba(245,166,35,0.16);
 
-  --text-primary:   #f0f4ff;
-  --text-secondary: #7a8aaa;
-  --text-muted:     #3d4f6e;
+  --text-primary:   #F2EDE4;
+  --text-secondary: #9A8F7E;
+  --text-muted:     #4A4236;
 
-  --accent:      #378ADD;
-  --accent-glow: rgba(55,138,221,0.15);
-  --accent-dim:  rgba(55,138,221,0.08);
+  --accent:      #F5A623;
+  --accent-glow: rgba(245,166,35,0.18);
+  --accent-dim:  rgba(245,166,35,0.08);
 
-  --success: #1D9E75;
+  --success: #3DBE7A;
   --warning: #EF9F27;
   --danger:  #E24B4A;
-  --purple:  #7F77DD;
+  --purple:  #9B8FE0;
+  --blue:    #5B8FD4;
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -36,7 +38,8 @@
   --radius-xl: 20px;
 
   --sidebar-w: 230px;
-  --font: 'Outfit', system-ui, sans-serif;
+  --font: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', system-ui;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -97,6 +100,7 @@ body {
 .brand-icon svg { width: 18px; height: 18px; }
 
 .brand-name {
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -240,6 +244,7 @@ body {
 }
 
 .page-title {
+  font-family: var(--font-display);
   font-size: 26px;
   font-weight: 700;
   letter-spacing: -0.5px;
@@ -359,6 +364,7 @@ body {
 .stat-card:nth-child(4) { animation-delay: 180ms; }
 
 .stat-value {
+  font-family: var(--font-display);
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.5px;
