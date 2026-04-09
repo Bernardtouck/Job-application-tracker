@@ -1,29 +1,27 @@
-import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
 import { isAuthenticated } from "./services/auth";
 import LandingPage from "./pages/LandingPage";
-import Login       from "./pages/Login";
-import Register    from "./pages/Register";
+import AuthPage    from "./pages/AuthPage";
 import Dashboard   from "./pages/Dashboard";
 
 function App() {
   const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    return isAuthenticated() ? children : <Navigate to="/" replace />;
+    return isAuthenticated() ? children : <Navigate to="/login" replace />;
   };
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing page — public */}
-        <Route path="/" element={<LandingPage />} />
+        {/* Landing */}
+        <Route path="/"         element={<LandingPage />} />
 
-        {/* Auth pages */}
-        <Route path="/login"    element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* Auth — same component handles /login and /register */}
+        <Route path="/login"    element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
 
-        {/* App — protected */}
+        {/* App */}
         <Route
           path="/dashboard"
           element={
