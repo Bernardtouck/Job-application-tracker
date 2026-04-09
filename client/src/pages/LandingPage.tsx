@@ -27,9 +27,9 @@ const CONTENT = {
     story: "I built JobTracker because tracking job applications across 5 different platforms in spreadsheets was chaos. As a passionate developer always chasing new discoveries in web development and artificial intelligence, I wanted a smarter tool — so I built one. It's my most complete fullstack project to date.",
     stack: "React · TypeScript · Node.js · Express · Prisma · PostgreSQL · Tesseract OCR",
     ticker: [
-      "📊 Track every application in one place",
-      "🎯 Stop losing track of your job hunt",
-      "🔒 Your data, your applications, your future",
+      " Track every application in one place",
+      " Stop losing track of your job hunt",
+      " Your data, your applications, your future",
     ],
   },
   de: {
@@ -51,9 +51,9 @@ const CONTENT = {
     story: "Ich habe JobTracker entwickelt, weil das Verwalten von Bewerbungen über 5 verschiedene Plattformen in Tabellenkalkulationen chaotisch war. Als leidenschaftlicher Entwickler, der immer neuen Entdeckungen in der Webentwicklung und künstlichen Intelligenz nachjagt, wollte ich ein intelligenteres Tool — also habe ich eines gebaut. Es ist mein bisher umfangreichstes Fullstack-Projekt.",
     stack: "React · TypeScript · Node.js · Express · Prisma · PostgreSQL · Tesseract OCR",
     ticker: [
-      "📊 Alle Bewerbungen an einem Ort verwalten",
-      "🎯 Behalte den Überblick über deine Jobsuche",
-      "🔒 Deine Daten, deine Bewerbungen, deine Zukunft",
+      " Alle Bewerbungen an einem Ort verwalten",
+      " Behalte den Überblick über deine Jobsuche",
+      " Deine Daten, deine Bewerbungen, deine Zukunft",
     ],
   },
 };
