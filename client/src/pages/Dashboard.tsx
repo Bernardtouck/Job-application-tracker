@@ -17,10 +17,10 @@ interface JobFormData {
 
 const STATUSES: JobStatus[] = ["APPLIED", "INTERVIEW", "OFFER", "REJECTED"];
 const STATUS_META: Record<JobStatus, { label: string; color: string }> = {
-  APPLIED: { label: "Applied", color: "#378ADD" },
+  APPLIED:   { label: "Applied",   color: "#5B8FD4" },
   INTERVIEW: { label: "Interview", color: "#EF9F27" },
-  OFFER: { label: "Offer", color: "#1D9E75" },
-  REJECTED: { label: "Rejected", color: "#E24B4A" },
+  OFFER:     { label: "Offer",     color: "#3DBE7A" },
+  REJECTED:  { label: "Rejected",  color: "#E24B4A" },
 };
 const EMPTY_FORM: JobFormData = {
   company: "", position: "", status: "APPLIED",
@@ -74,15 +74,15 @@ function ConfidenceBar({ value }: { value: number }) {
   );
 }
 
-function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onClose: () => void }) {
-  const [mode, setMode] = useState<"text" | "image">("text");
-  const [text, setText] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+function ParseJobModal({ onParsed, onClose }: { onParsed: (data: ParsedJob) => void; onClose: () => void }) {
+  const [mode, setMode]       = useState<"text" | "image">("text");
+  const [text, setText]       = useState("");
+  const [file, setFile]       = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [result, setResult] = useState<ParsedJob | null>(null);
+  const [error, setError]     = useState("");
+  const [result, setResult]   = useState<ParsedJob | null>(null);
   const [rawText, setRawText] = useState("");
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef               = useRef<HTMLInputElement>(null);
 
   const handleParse = async () => {
     setError(""); setResult(null);
@@ -136,8 +136,8 @@ function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onCl
             ) : (
               <div className="upload-placeholder">
                 <svg viewBox="0 0 48 48" fill="none">
-                  <rect x="8" y="8" width="32" height="32" rx="6" stroke="currentColor" strokeWidth="2" />
-                  <path d="M24 16v16M16 24h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <rect x="8" y="8" width="32" height="32" rx="6" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M24 16v16M16 24h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
                 <p className="upload-title">Click to upload screenshot</p>
                 <p className="upload-sub">PNG, JPG, WEBP · max 5 MB</p>
@@ -173,13 +173,13 @@ function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onCl
             </div>
             <div className="parse-fields">
               {[
-                { label: "Job title", value: result.title },
-                { label: "Company", value: result.company },
-                { label: "Location", value: result.location },
-                { label: "Salary", value: result.salary },
+                { label: "Job title",     value: result.title },
+                { label: "Company",       value: result.company },
+                { label: "Location",      value: result.location },
+                { label: "Salary",        value: result.salary },
                 { label: "Contract type", value: result.contractType !== "unknown" ? result.contractType : null },
-                { label: "Work mode", value: result.workMode !== "unknown" ? result.workMode : null },
-                { label: "Language", value: result.language !== "unknown" ? result.language.toUpperCase() : null },
+                { label: "Work mode",     value: result.workMode !== "unknown" ? result.workMode : null },
+                { label: "Language",      value: result.language !== "unknown" ? result.language.toUpperCase() : null },
               ].map(({ label, value }) => (
                 <div key={label} className="parse-field">
                   <span className="parse-field-label">{label}</span>
@@ -264,23 +264,23 @@ function JobForm({ initial, onSubmit, onCancel, loading }: {
 export default function Dashboard() {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [jobs, setJobs]             = useState<Job[]>([]);
+  const [error, setError]           = useState("");
+  const [loading, setLoading]       = useState(true);
+  const [saving, setSaving]         = useState(false);
   const [showCreate, setShowCreate] = useState(false);
-  const [showParse, setShowParse] = useState(false);
+  const [showParse, setShowParse]     = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [isFirstLogin, setIsFirstLogin] = useState(false);
-  const [profile, setProfile] = useState<UserProfile | null>(() => {
+  const [profile, setProfile]         = useState<UserProfile | null>(() => {
     try { return JSON.parse(localStorage.getItem("userProfile") || "null"); }
     catch { return null; }
   });
-  const [editJob, setEditJob] = useState<Job | null>(null);
-  const [deleteJob, setDeleteJob] = useState<Job | null>(null);
+  const [editJob, setEditJob]       = useState<Job | null>(null);
+  const [deleteJob, setDeleteJob]   = useState<Job | null>(null);
   const [createForm, setCreateForm] = useState<JobFormData>(EMPTY_FORM);
   const [filterStatus, setFilterStatus] = useState<JobStatus | "ALL">("ALL");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery]   = useState("");
 
   const fetchJobs = useCallback(async () => {
     try { setLoading(true); const res = await API.get("/jobs"); setJobs(res.data); setError(""); }
@@ -320,12 +320,12 @@ export default function Dashboard() {
 
   const handleParsed = (parsed: ParsedJob) => {
     setCreateForm({
-      company: parsed.company ?? "",
-      position: parsed.title ?? "",
-      location: parsed.location ?? "",
-      salary: parsed.salary ?? "",
+      company:      parsed.company      ?? "",
+      position:     parsed.title        ?? "",
+      location:     parsed.location     ?? "",
+      salary:       parsed.salary       ?? "",
       contractType: parsed.contractType !== "unknown" ? parsed.contractType : "",
-      workMode: parsed.workMode !== "unknown" ? parsed.workMode : "",
+      workMode:     parsed.workMode     !== "unknown" ? parsed.workMode     : "",
       status: "APPLIED", notes: "",
     });
     setShowParse(false);
@@ -345,47 +345,34 @@ export default function Dashboard() {
   };
 
   const stats = {
-    total: jobs.length,
+    total:      jobs.length,
     interviews: jobs.filter((j) => j.status === "INTERVIEW").length,
-    offers: jobs.filter((j) => j.status === "OFFER").length,
-    successRate: (() => {
-      const decided = jobs.filter(
-        (j) => j.status === "OFFER" || j.status === "REJECTED"
-      ).length;
-      if (decided === 0) return 0;
-      return Math.round(
-        (jobs.filter((j) => j.status === "OFFER").length / decided) * 100
-      );
-    })(),
-    failRate: (() => {
-      const decided = jobs.filter(
-        (j) => j.status === "OFFER" || j.status === "REJECTED"
-      ).length;
-      if (decided === 0) return 0;
-      return Math.round(
-        (jobs.filter((j) => j.status === "REJECTED").length / decided) * 100
-      );
-    })(),
+    offers:     jobs.filter((j) => j.status === "OFFER").length,
+    rate:       jobs.length ? Math.round((jobs.filter((j) => j.status !== "REJECTED").length / jobs.length) * 100) : 0,
   };
 
   return (
     <div className="app-shell">
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <div className="brand-icon">
-            <svg viewBox="0 0 20 20" fill="none">
-              <rect x="2" y="2" width="7" height="7" rx="2" fill="currentColor" />
-              <rect x="11" y="2" width="7" height="7" rx="2" fill="currentColor" opacity=".5" />
-              <rect x="2" y="11" width="7" height="7" rx="2" fill="currentColor" opacity=".5" />
-              <rect x="11" y="11" width="7" height="7" rx="2" fill="currentColor" />
+          <div className="brand-icon-wrap">
+            <svg viewBox="0 0 40 40" fill="none" style={{ width: 32, height: 32 }}>
+              <rect x="4" y="14" width="32" height="22" rx="4" fill="#F5A623" opacity="0.15" stroke="#F5A623" strokeWidth="1.5"/>
+              <path d="M14 14V11a2 2 0 012-2h8a2 2 0 012 2v3" stroke="#F5A623" strokeWidth="1.5" strokeLinecap="round"/>
+              <line x1="4" y1="22" x2="36" y2="22" stroke="#F5A623" strokeWidth="1" opacity="0.4"/>
+              <circle cx="20" cy="22" r="2.5" fill="#F5A623"/>
+              <line x1="20" y1="22" x2="20" y2="28" stroke="#F5A623" strokeWidth="1" opacity="0.5"/>
+              <circle cx="14" cy="28" r="1.5" fill="#F5A623" opacity="0.6"/>
+              <circle cx="26" cy="28" r="1.5" fill="#F5A623" opacity="0.6"/>
+              <line x1="14" y1="28" x2="26" y2="28" stroke="#F5A623" strokeWidth="1" opacity="0.4"/>
             </svg>
           </div>
-          <span className="brand-name">JobTracker</span>
+          <span className="brand-name">Job<span style={{ color: "#F5A623" }}>Tracker</span></span>
         </div>
         <nav className="sidebar-nav">
           <div className="nav-section-label">Main</div>
           <a className="nav-item active" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm8-8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>Dashboard</a>
-          <a className="nav-item" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>Applications<span className="nav-badge">{jobs.length}</span></a>
+          <a className="nav-item" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>Applications<span className="nav-badge">{jobs.length}</span></a>
           <div className="nav-section-label" style={{ marginTop: "1.5rem" }}>Insights</div>
           <a className="nav-item" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>Analytics</a>
         </nav>
@@ -437,12 +424,11 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className="stats-row" style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}>
-          <StatCard value={stats.total} label="Total applied" accent="#378ADD" />
-          <StatCard value={stats.interviews} label="Interviews" accent="#EF9F27" />
-          <StatCard value={stats.offers} label="Offers" accent="#1D9E75" />
-          <StatCard value={`${stats.successRate}%`} label="Success rate" accent="#1D9E75" />
-          <StatCard value={`${stats.failRate}%`} label="Rejection rate" accent="#E24B4A" />
+        <div className="stats-row">
+          <StatCard value={stats.total}      label="Total applied"  accent="#F5A623" />
+          <StatCard value={stats.interviews} label="Interviews"     accent="#EF9F27" />
+          <StatCard value={stats.offers}     label="Offers"         accent="#3DBE7A" />
+          <StatCard value={`${stats.rate}%`} label="Success rate"   accent="#3DBE7A" />
         </div>
 
         <div className="filters-bar">
@@ -467,10 +453,10 @@ export default function Dashboard() {
             <div className="table-empty">
               <div className="empty-icon">
                 <svg viewBox="0 0 48 48" fill="none">
-                  <rect x="8" y="12" width="32" height="28" rx="4" stroke="currentColor" strokeWidth="2" />
-                  <path d="M16 20h16M16 28h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  <circle cx="36" cy="12" r="8" fill="#378ADD" />
-                  <path d="M33 12h6M36 9v6" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+                  <rect x="8" y="12" width="32" height="28" rx="4" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M16 20h16M16 28h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  <circle cx="36" cy="12" r="8" fill="#378ADD"/>
+                  <path d="M33 12h6M36 9v6" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </div>
               <p className="empty-title">{jobs.length === 0 ? "No applications yet" : "No results found"}</p>
@@ -500,7 +486,7 @@ export default function Dashboard() {
                     <td><StatusBadge status={job.status as JobStatus} /></td>
                     <td className="date-cell">{new Date(job.appliedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}</td>
                     <td className="notes-cell">{job.location || <span className="no-notes">—</span>}</td>
-                    <td className="notes-cell">{job.notes || <span className="no-notes">—</span>}</td>
+                    <td className="notes-cell">{job.notes    || <span className="no-notes">—</span>}</td>
                     <td>
                       <div className="row-actions">
                         <button className="action-btn edit-btn" onClick={() => setEditJob(job)} title="Edit">
@@ -532,7 +518,7 @@ export default function Dashboard() {
       {deleteJob && (
         <Modal title="Delete application" onClose={() => setDeleteJob(null)}>
           <div className="delete-confirm">
-            <div className="delete-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></div>
+            <div className="delete-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
             <p className="delete-title">Delete <strong>{deleteJob.company}</strong>?</p>
             <p className="delete-sub">This will permanently remove the application for <em>{deleteJob.position}</em>. This action cannot be undone.</p>
             <div className="form-actions">
