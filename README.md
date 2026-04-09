@@ -1,8 +1,7 @@
 # Job Application Tracker — Smart Job Parsing (EN / DE)
 
-A full-stack web application that helps users track their job applications and automatically extract key information from job postings written in **English** or **German**, either from **text** or **screenshots**.
-
-This project focuses on clean backend architecture, real-world business logic, and progressive feature development.
+A full-stack web application that helps users track their job applications and automatically extract key information from job postings written in English or German, either from text or screenshots.
+Built by Bernard Touck, computer science student passionate about web development and artificial intelligence — to automate his own job search and demonstrate fullstack skills.
 
 ---
 
@@ -14,21 +13,24 @@ This project focuses on clean backend architecture, real-world business logic, a
 
 ## Overview
 
-Managing job applications across multiple platforms can quickly become chaotic.  
+Managing job applications across multiple platforms quickly becomes chaotic.
 This application centralizes the process by allowing users to:
-
-- track job applications manually
-- **automatically extract structured data from job postings**
-- manage applications through a clean and secure system
-
-The application is designed with a **client–server architecture** and follows REST API best practices.
+ 
+- Track job applications manually
+- **Automatically extract structured data from job postings**
+- Parse job posting screenshots via OCR
+- Manage a user profile with avatar and username
+- Monitor success and rejection rates in real time
+ 
+The application follows a **client–server architecture** and REST API best practices.
 
 ---
 
 ## Key Features
 
 - User authentication (register / login)
-- Manual job application tracking
+- Password hashing (bcrypt) 
+- Manual job application tracking CRUD
 - **Smart job parsing from copied job descriptions**
 - **Job parsing from screenshots (OCR)**
 - Automatic extraction of:
@@ -97,11 +99,12 @@ The application follows a **client–server architecture**:
 
 ### Front-end
 
-- [React](https://react.dev/) — Frontend framework for building user interfaces
-- [TypeScript](https://www.typescriptlang.org/) — Typed JavaScript for safer and more maintainable code
+- [React](https://react.dev/) — UI framework for building interfaces
+- [TypeScript](https://www.typescriptlang.org/) — Type-safe JavaScript
 - [React Router](https://reactrouter.com/) — Client-side routing and navigation
-- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) — Styling and layout
-- [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) — HTTP communication with the backend
+- [Axios](https://axios-http.com/) — HTTP client with JWT interceptors
+- [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque) + [DM Sans](https://fonts.google.com/specimen/DM+Sans) — Typography
+- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) — Dark organic amber design system
 
 ---
 
@@ -109,22 +112,144 @@ The application follows a **client–server architecture**:
 
 - [Node.js](https://nodejs.org/) — JavaScript runtime environment
 - [Express](https://expressjs.com/) — Web framework for building REST APIs
+- [TypeScript](https://www.typescriptlang.org/) — Type-safe backend
 - [Prisma](https://www.prisma.io/) — ORM for type-safe database access
 - [PostgreSQL](https://www.postgresql.org/) — Relational database for persistent storage
-- [JWT (JSON Web Token)](https://jwt.io/) — Secure authentication mechanism
+- [JWT](https://jwt.io/) — Authentication tokens (7 days expiry)
 - [bcrypt](https://www.npmjs.com/package/bcrypt) — Password hashing
-- [dotenv](https://www.npmjs.com/package/dotenv) — Environment variable management
+- [Joi](https://joi.dev/) — Request body validation
+- [Multer](https://www.npmjs.com/package/multer) — File upload handling
+- [Tesseract.js](https://tesseract.projectnaptha.com/) — OCR image to text (EN + DE)
 
 ---
 
-### Image & Text Processing
-
-- OCR (planned) — Image-to-text extraction for job screenshots
-- Custom text parsing — Rule-based extraction for EN / DE job postings
-
-
 ## Project Structure
+ 
+```
+job-application-tracker/
+├── client/                        # React frontend
+│   └── src/
+│       ├── api/                   # Axios instance, parser API, profile API
+│       ├── assets/pictures/       # Local images (student photo)
+│       ├── components/            # ProfileModal
+│       ├── hooks/                 # useAuth
+│       ├── pages/                 # LandingPage, AuthPage, Dashboard
+│       ├── services/              # auth.ts (JWT decode + expiry check)
+│       └── types/                 # Job, User, Parser TypeScript interfaces
+│
+└── server/                        # Express backend
+    ├── prisma/
+    │   ├── schema.prisma          # User, Job models + migrations
+    │   └── migrations/
+    └── src/
+        ├── controllers/           # user, job, parser controllers
+        ├── services/              # business logic + NLP engine + OCR
+        ├── middleware/            # JWT authentication
+        ├── routes/                # user, job, parser routes
+        └── types/                 # Shared TypeScript types
+```
+ 
+---
 
-Below is a snapshot of the current project structure in VS Code:
+## API Endpoints
 
-![Project Structure](assets/screenshots/project-structure.png)
+```bash
+# Auth & Profile
+POST   /users              # Register — public
+POST   /auth/login         # Login → JWT — public
+GET    /users/profile      # Get profile — 🔒 JWT
+PUT    /users/profile      # Update username / avatar — 🔒 JWT
+
+# Jobs
+GET    /jobs               # Get all user jobs — 🔒 JWT
+POST   /jobs               # Create job — 🔒 JWT
+PUT    /jobs/:id           # Update job — 🔒 JWT
+DELETE /jobs/:id           # Delete job — 🔒 JWT
+
+# Parsing
+POST   /parse/text         # Parse job posting text (EN / DE) — 🔒 JWT
+POST   /parse/image        # Parse screenshot via OCR — 🔒 JWT
+```
+
+---
+
+## Getting Started
+ 
+### Prerequisites
+- Node.js 18+
+- PostgreSQL
+- npm
+ 
+### Installation
+ 
+```bash
+git clone https://github.com/your-username/job-application-tracker.git
+cd job-application-tracker
+ 
+cd server && npm install
+cd ../client && npm install
+```
+ 
+### Environment variables
+ 
+Create `server/.env`:
+ 
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/job_tracker_db"
+JWT_SECRET="your-secret-key"
+PORT=3000
+```
+ 
+Create `client/.env`:
+ 
+```env
+VITE_API_URL=http://localhost:3000
+```
+ 
+### Database setup
+ 
+```bash
+cd server
+npx prisma migrate dev
+npx prisma generate
+```
+ 
+### Run
+ 
+```bash
+# Terminal 1
+cd server && npm run dev
+ 
+# Terminal 2
+cd client && npm run dev
+```
+ 
+Open [http://localhost:5173](http://localhost:5173)
+ 
+---
+ 
+## What I learned building this
+ 
+- Layered REST API architecture — controllers → services → Prisma
+- JWT authentication with client-side expiry detection
+- Building a multi-layer NLP extraction engine without external AI APIs
+- Tesseract OCR integration with EN+DE language models and artifact cleaning
+- PostgreSQL + Prisma ORM with migrations
+- React fullstack with TypeScript end-to-end
+- Cohesive design system across multiple pages
+ 
+---
+ 
+## Roadmap
+ 
+- [ ] Deploy frontend (Vercel) + backend (Railway)
+- [ ] Improve DE city detection in OCR mode
+- [ ] Export applications to CSV
+- [ ] Email reminders for interview dates
+- [ ] Pagination on the jobs table
+ 
+---
+ 
+## License
+ 
+MIT — Bernard Touck © 2026
