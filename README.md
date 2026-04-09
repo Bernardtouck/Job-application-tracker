@@ -8,7 +8,7 @@ This project focuses on clean backend architecture, real-world business logic, a
 
 ## Demo
 
-![Dashboard Preview](assets/screenshots/dashboard-preview.gif)
+![Dashboard Preview](assets/screenshots/demo.gif)
  
 ---
 
