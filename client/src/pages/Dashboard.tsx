@@ -302,7 +302,7 @@ function AnalyticsSection({ jobs }: { jobs: Job[] }) {
                     {donutData.map((entry, i) => <Cell key={i} fill={entry.color} opacity={0.9} />)}
                   </Pie>
                   <Tooltip contentStyle={{ background: "#1a1610", border: "1px solid rgba(245,166,35,0.16)", borderRadius: 8, fontSize: 12, color: "#F2EDE4" }}
-                    formatter={(value: number, name: string) => [value, name.charAt(0) + name.slice(1).toLowerCase()]} />
+                    formatter={(value: any, name: any) => [value, String(name).charAt(0) + String(name).slice(1).toLowerCase()]} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="donut-legend">
@@ -328,7 +328,7 @@ function AnalyticsSection({ jobs }: { jobs: Job[] }) {
                 <XAxis dataKey="month" tick={{ fill: "#4A4236", fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: "#4A4236", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
                 <Tooltip contentStyle={{ background: "#1a1610", border: "1px solid rgba(245,166,35,0.16)", borderRadius: 8, fontSize: 12, color: "#F2EDE4" }}
-                  cursor={{ fill: "rgba(245,166,35,0.05)" }} formatter={(value: number) => [value, "Applications"]} />
+                  cursor={{ fill: "rgba(245,166,35,0.05)" }} formatter={(value: any) => [value, "Applications"]} />
                 <Bar dataKey="count" fill="#F5A623" radius={[4, 4, 0, 0]} opacity={0.85} />
               </BarChart>
             </ResponsiveContainer>
@@ -473,8 +473,8 @@ export default function Dashboard() {
           <div className="nav-section-label" style={{ marginTop: "1.5rem" }}>Insights</div>
           <a
             className={`nav-item ${activeNav === "analytics" ? "active" : ""}`}
-            href="#analytics"
-            onClick={() => setActiveNav("analytics")}
+            href="#"
+            onClick={(e) => { e.preventDefault(); navigate("/analytics"); }}
           >
             <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>
             Analytics
