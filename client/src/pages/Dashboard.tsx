@@ -74,7 +74,7 @@ function ConfidenceBar({ value }: { value: number }) {
   );
 }
 
-function ParseJobModal({ onParsed, onClose }: { onParsed: (data: ParsedJob) => void; onClose: () => void }) {
+function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onClose: () => void }) {
   const [mode, setMode]       = useState<"text" | "image">("text");
   const [text, setText]       = useState("");
   const [file, setFile]       = useState<File | null>(null);
@@ -348,7 +348,15 @@ export default function Dashboard() {
     total:      jobs.length,
     interviews: jobs.filter((j) => j.status === "INTERVIEW").length,
     offers:     jobs.filter((j) => j.status === "OFFER").length,
-    rate:       jobs.length ? Math.round((jobs.filter((j) => j.status !== "REJECTED").length / jobs.length) * 100) : 0,
+    rate: (() => {
+      const decided = jobs.filter(
+        (j) => j.status === "OFFER" || j.status === "REJECTED"
+      ).length;
+      if (decided === 0) return 0;
+      return Math.round(
+        (jobs.filter((j) => j.status === "OFFER").length / decided) * 100
+      );
+    })(),
   };
 
   return (
