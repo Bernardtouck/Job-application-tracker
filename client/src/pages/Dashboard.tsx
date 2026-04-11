@@ -8,6 +8,10 @@ import type { ParsedJob } from "../types/parser.types";
 import type { UserProfile } from "../types/user.types";
 import ProfileModal from "../components/ProfileModal";
 import "./Dashboard.css";
+import {
+  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+} from "recharts";
 
 interface JobFormData {
   company: string; position: string; status: JobStatus;
@@ -63,7 +67,7 @@ function Modal({ title, children, onClose, wide }: {
 
 function ConfidenceBar({ value }: { value: number }) {
   const pct = Math.round(value * 100);
-  const color = pct >= 80 ? "#1D9E75" : pct >= 55 ? "#EF9F27" : "#E24B4A";
+  const color = pct >= 80 ? "#3DBE7A" : pct >= 55 ? "#EF9F27" : "#E24B4A";
   return (
     <div className="confidence-wrap">
       <div className="confidence-bar">
@@ -111,7 +115,6 @@ function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onCl
           Upload screenshot
         </button>
       </div>
-
       <div className="parse-body">
         {mode === "text" ? (
           <div className="form-group">
@@ -127,7 +130,7 @@ function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onCl
               onChange={(e) => { setFile(e.target.files?.[0] ?? null); setResult(null); setError(""); }} />
             {file ? (
               <div className="upload-selected">
-                <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 24, height: 24, color: "#1D9E75" }}>
+                <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 24, height: 24, color: "#3DBE7A" }}>
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span className="upload-filename">{file.name}</span>
@@ -145,7 +148,6 @@ function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onCl
             )}
           </div>
         )}
-
         {error && (
           <div className="parse-error">
             <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 14, height: 14, flexShrink: 0 }}>
@@ -154,7 +156,6 @@ function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onCl
             {error}
           </div>
         )}
-
         {!result && (
           <button className="btn-primary parse-btn" onClick={handleParse} disabled={loading}>
             {loading ? (<><span className="btn-spinner" />{mode === "image" ? "Running OCR…" : "Parsing…"}</>) : (
@@ -164,7 +165,6 @@ function ParseJobModal({ onParsed }: { onParsed: (data: ParsedJob) => void; onCl
             )}
           </button>
         )}
-
         {result && (
           <div className="parse-result">
             <div className="parse-result-header">
@@ -261,18 +261,98 @@ function JobForm({ initial, onSubmit, onCancel, loading }: {
   );
 }
 
+// ─── Analytics Section ───────────────────────────────
+const STATUS_COLORS: Record<string, string> = {
+  APPLIED:   "#5B8FD4",
+  INTERVIEW: "#EF9F27",
+  OFFER:     "#3DBE7A",
+  REJECTED:  "#E24B4A",
+};
+
+function AnalyticsSection({ jobs }: { jobs: Job[] }) {
+  const donutData = STATUSES
+    .map((s) => ({ name: s, value: jobs.filter((j) => j.status === s).length, color: STATUS_COLORS[s] }))
+    .filter((d) => d.value > 0);
+
+  const monthMap: Record<string, number> = {};
+  jobs.forEach((j) => {
+    const d = new Date(j.appliedAt);
+    const key = d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+    monthMap[key] = (monthMap[key] || 0) + 1;
+  });
+  const barData = Object.entries(monthMap).map(([month, count]) => ({ month, count })).slice(-6);
+  const isEmpty = jobs.length === 0;
+
+  return (
+    <div className="analytics-section" id="analytics">
+      <div className="analytics-header">
+        <h2 className="analytics-title">Analytics</h2>
+        <span className="analytics-subtitle">{jobs.length} total applications</span>
+      </div>
+      <div className="analytics-grid">
+        <div className="analytics-card">
+          <div className="analytics-card-title">Status breakdown</div>
+          {isEmpty ? (
+            <div className="analytics-empty">No data yet</div>
+          ) : (
+            <>
+              <ResponsiveContainer width="100%" height={160}>
+                <PieChart>
+                  <Pie data={donutData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value" strokeWidth={0}>
+                    {donutData.map((entry, i) => <Cell key={i} fill={entry.color} opacity={0.9} />)}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "#1a1610", border: "1px solid rgba(245,166,35,0.16)", borderRadius: 8, fontSize: 12, color: "#F2EDE4" }}
+                    formatter={(value: number, name: string) => [value, name.charAt(0) + name.slice(1).toLowerCase()]} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="donut-legend">
+                {donutData.map((d) => (
+                  <div key={d.name} className="legend-item">
+                    <div className="legend-dot" style={{ background: d.color }} />
+                    <span>{d.name.charAt(0) + d.name.slice(1).toLowerCase()}</span>
+                    <span className="legend-count">{d.value}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        <div className="analytics-card">
+          <div className="analytics-card-title">Applications over time</div>
+          {isEmpty || barData.length === 0 ? (
+            <div className="analytics-empty">No data yet</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={barData} barSize={28} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,166,35,0.07)" vertical={false} />
+                <XAxis dataKey="month" tick={{ fill: "#4A4236", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "#4A4236", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip contentStyle={{ background: "#1a1610", border: "1px solid rgba(245,166,35,0.16)", borderRadius: 8, fontSize: 12, color: "#F2EDE4" }}
+                  cursor={{ fill: "rgba(245,166,35,0.05)" }} formatter={(value: number) => [value, "Applications"]} />
+                <Bar dataKey="count" fill="#F5A623" radius={[4, 4, 0, 0]} opacity={0.85} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Dashboard ───────────────────────────────────
 export default function Dashboard() {
   const { logout } = useAuth();
-  const navigate = useNavigate();
+  const navigate   = useNavigate();
+
   const [jobs, setJobs]             = useState<Job[]>([]);
   const [error, setError]           = useState("");
   const [loading, setLoading]       = useState(true);
   const [saving, setSaving]         = useState(false);
   const [showCreate, setShowCreate] = useState(false);
-  const [showParse, setShowParse]     = useState(false);
+  const [showParse, setShowParse]   = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [isFirstLogin, setIsFirstLogin] = useState(false);
-  const [profile, setProfile]         = useState<UserProfile | null>(() => {
+  const [profile, setProfile]       = useState<UserProfile | null>(() => {
     try { return JSON.parse(localStorage.getItem("userProfile") || "null"); }
     catch { return null; }
   });
@@ -281,6 +361,7 @@ export default function Dashboard() {
   const [createForm, setCreateForm] = useState<JobFormData>(EMPTY_FORM);
   const [filterStatus, setFilterStatus] = useState<JobStatus | "ALL">("ALL");
   const [searchQuery, setSearchQuery]   = useState("");
+  const [activeNav, setActiveNav]   = useState<"dashboard" | "applications" | "analytics">("dashboard");
 
   const fetchJobs = useCallback(async () => {
     try { setLoading(true); const res = await API.get("/jobs"); setJobs(res.data); setError(""); }
@@ -290,12 +371,8 @@ export default function Dashboard() {
 
   useEffect(() => { fetchJobs(); }, [fetchJobs]);
 
-  // Show profile modal automatically on first login (no username set)
   useEffect(() => {
-    if (profile && !profile.username) {
-      setIsFirstLogin(true);
-      setShowProfile(true);
-    }
+    if (profile && !profile.username) { setIsFirstLogin(true); setShowProfile(true); }
   }, []);
 
   const handleCreate = async (data: JobFormData) => {
@@ -349,13 +426,9 @@ export default function Dashboard() {
     interviews: jobs.filter((j) => j.status === "INTERVIEW").length,
     offers:     jobs.filter((j) => j.status === "OFFER").length,
     rate: (() => {
-      const decided = jobs.filter(
-        (j) => j.status === "OFFER" || j.status === "REJECTED"
-      ).length;
+      const decided = jobs.filter((j) => j.status === "OFFER" || j.status === "REJECTED").length;
       if (decided === 0) return 0;
-      return Math.round(
-        (jobs.filter((j) => j.status === "OFFER").length / decided) * 100
-      );
+      return Math.round((jobs.filter((j) => j.status === "OFFER").length / decided) * 100);
     })(),
   };
 
@@ -377,13 +450,37 @@ export default function Dashboard() {
           </div>
           <span className="brand-name">Job<span style={{ color: "#F5A623" }}>Tracker</span></span>
         </div>
+
         <nav className="sidebar-nav">
           <div className="nav-section-label">Main</div>
-          <a className="nav-item active" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm8-8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>Dashboard</a>
-          <a className="nav-item" href="#table"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>Applications<span className="nav-badge">{jobs.length}</span></a>
+          <a
+            className={`nav-item ${activeNav === "dashboard" ? "active" : ""}`}
+            href="#"
+            onClick={(e) => { e.preventDefault(); setActiveNav("dashboard"); window.scrollTo(0, 0); }}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm8-8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>
+            Dashboard
+          </a>
+          <a
+            className={`nav-item ${activeNav === "applications" ? "active" : ""}`}
+            href="#table"
+            onClick={() => setActiveNav("applications")}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>
+            Applications
+            <span className="nav-badge">{jobs.length}</span>
+          </a>
           <div className="nav-section-label" style={{ marginTop: "1.5rem" }}>Insights</div>
-          <a className="nav-item" href="#"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>Analytics</a>
+          <a
+            className={`nav-item ${activeNav === "analytics" ? "active" : ""}`}
+            href="#analytics"
+            onClick={() => setActiveNav("analytics")}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>
+            Analytics
+          </a>
         </nav>
+
         <div className="sidebar-footer">
           <div className="user-info" onClick={() => { setIsFirstLogin(false); setShowProfile(true); }} style={{ cursor: "pointer", flex: 1 }} title="Edit profile">
             <div className="sidebar-avatar">
@@ -463,7 +560,7 @@ export default function Dashboard() {
                 <svg viewBox="0 0 48 48" fill="none">
                   <rect x="8" y="12" width="32" height="28" rx="4" stroke="currentColor" strokeWidth="2"/>
                   <path d="M16 20h16M16 28h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  <circle cx="36" cy="12" r="8" fill="#378ADD"/>
+                  <circle cx="36" cy="12" r="8" fill="#F5A623"/>
                   <path d="M33 12h6M36 9v6" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </div>
@@ -484,7 +581,7 @@ export default function Dashboard() {
                   <tr key={job.id} style={{ "--row-delay": `${i * 40}ms` } as React.CSSProperties} className="table-row">
                     <td>
                       <div className="company-cell">
-                        <div className="company-avatar" style={{ "--av-color": STATUS_META[job.status]?.color || "#378ADD" } as React.CSSProperties}>
+                        <div className="company-avatar" style={{ "--av-color": STATUS_META[job.status]?.color || "#F5A623" } as React.CSSProperties}>
                           {job.company.slice(0, 2).toUpperCase()}
                         </div>
                         <span className="company-name">{job.company}</span>
@@ -511,6 +608,8 @@ export default function Dashboard() {
             </table>
           )}
         </div>
+
+        <AnalyticsSection jobs={jobs} />
       </main>
 
       {showProfile && (
