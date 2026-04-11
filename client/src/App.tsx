@@ -5,6 +5,7 @@ import { isAuthenticated } from "./services/auth";
 import LandingPage from "./pages/LandingPage";
 import AuthPage    from "./pages/AuthPage";
 import Dashboard   from "./pages/Dashboard";
+import AnalyticsPage  from "./pages/AnalyticsPage";
 
 function App() {
   const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -30,6 +31,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
