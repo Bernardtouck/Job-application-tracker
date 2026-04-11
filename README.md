@@ -195,8 +195,8 @@ cd ../client && npm install
 Create `server/.env`:
  
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/job_tracker_db"
-JWT_SECRET="your-secret-key"
+DATABASE_URL="postgresql://postgres:2002@localhost:5432/job_tracker_db"
+JWT_SECRET=mysecretkey
 PORT=3000
 ```
  
