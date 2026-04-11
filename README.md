@@ -183,7 +183,7 @@ POST   /parse/image        # Parse screenshot via OCR — 🔒 JWT
 ### Installation
  
 ```bash
-git clone https://github.com/your-username/job-application-tracker.git
+git clone https://github.com/Bernardtouck/job-application-tracker.git
 cd job-application-tracker
  
 cd server && npm install
