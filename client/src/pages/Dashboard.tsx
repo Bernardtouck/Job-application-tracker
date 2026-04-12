@@ -9,7 +9,6 @@ import type { UserProfile } from "../types/user.types";
 import ProfileModal from "../components/ProfileModal";
 import "./Dashboard.css";
 
-
 interface JobFormData {
   company: string; position: string; status: JobStatus;
   notes: string; location: string; salary: string;
@@ -258,30 +257,30 @@ function JobForm({ initial, onSubmit, onCancel, loading }: {
   );
 }
 
-
 // ─── Main Dashboard ───────────────────────────────────
 export default function Dashboard() {
   const { logout } = useAuth();
   const navigate   = useNavigate();
 
-  const [jobs, setJobs]             = useState<Job[]>([]);
-  const [error, setError]           = useState("");
-  const [loading, setLoading]       = useState(true);
-  const [saving, setSaving]         = useState(false);
-  const [showCreate, setShowCreate] = useState(false);
-  const [showParse, setShowParse]   = useState(false);
+  const [jobs, setJobs]               = useState<Job[]>([]);
+  const [error, setError]             = useState("");
+  const [loading, setLoading]         = useState(true);
+  const [saving, setSaving]           = useState(false);
+  const [showCreate, setShowCreate]   = useState(false);
+  const [showParse, setShowParse]     = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [isFirstLogin, setIsFirstLogin] = useState(false);
-  const [profile, setProfile]       = useState<UserProfile | null>(() => {
+  const [profile, setProfile]         = useState<UserProfile | null>(() => {
     try { return JSON.parse(localStorage.getItem("userProfile") || "null"); }
     catch { return null; }
   });
-  const [editJob, setEditJob]       = useState<Job | null>(null);
-  const [deleteJob, setDeleteJob]   = useState<Job | null>(null);
-  const [createForm, setCreateForm] = useState<JobFormData>(EMPTY_FORM);
+  const [editJob, setEditJob]         = useState<Job | null>(null);
+  const [deleteJob, setDeleteJob]     = useState<Job | null>(null);
+  const [createForm, setCreateForm]   = useState<JobFormData>(EMPTY_FORM);
   const [filterStatus, setFilterStatus] = useState<JobStatus | "ALL">("ALL");
   const [searchQuery, setSearchQuery]   = useState("");
-  const [activeNav, setActiveNav]   = useState<"dashboard" | "applications" | "analytics">("dashboard");
+  const [activeNav, setActiveNav]     = useState<"dashboard" | "applications" | "analytics">("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const fetchJobs = useCallback(async () => {
     try { setLoading(true); const res = await API.get("/jobs"); setJobs(res.data); setError(""); }
@@ -354,7 +353,32 @@ export default function Dashboard() {
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+
+      {/* ── Mobile overlay ── */}
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? "active" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
+      {/* ── Mobile topbar ── */}
+      <div className="mobile-topbar">
+        <div className="mobile-brand">
+          <svg viewBox="0 0 40 40" fill="none" style={{ width: 26, height: 26 }}>
+            <rect x="4" y="14" width="32" height="22" rx="4" fill="#F5A623" opacity="0.15" stroke="#F5A623" strokeWidth="1.5"/>
+            <path d="M14 14V11a2 2 0 012-2h8a2 2 0 012 2v3" stroke="#F5A623" strokeWidth="1.5" strokeLinecap="round"/>
+            <circle cx="20" cy="22" r="2.5" fill="#F5A623"/>
+          </svg>
+          Job<span>Tracker</span>
+        </div>
+        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(v => !v)}>
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
+
+      {/* ── Sidebar ── */}
+      <aside className={`sidebar ${sidebarOpen ? "sidebar--open" : ""}`}>
         <div className="sidebar-brand">
           <div className="brand-icon-wrap">
             <svg viewBox="0 0 40 40" fill="none" style={{ width: 32, height: 32 }}>
@@ -376,7 +400,7 @@ export default function Dashboard() {
           <a
             className={`nav-item ${activeNav === "dashboard" ? "active" : ""}`}
             href="#"
-            onClick={(e) => { e.preventDefault(); setActiveNav("dashboard"); window.scrollTo(0, 0); }}
+            onClick={(e) => { e.preventDefault(); setActiveNav("dashboard"); window.scrollTo(0, 0); setSidebarOpen(false); }}
           >
             <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm8-8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V4zm0 8a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>
             Dashboard
@@ -384,7 +408,7 @@ export default function Dashboard() {
           <a
             className={`nav-item ${activeNav === "applications" ? "active" : ""}`}
             href="#table"
-            onClick={() => setActiveNav("applications")}
+            onClick={() => { setActiveNav("applications"); setSidebarOpen(false); }}
           >
             <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>
             Applications
@@ -394,7 +418,7 @@ export default function Dashboard() {
           <a
             className={`nav-item ${activeNav === "analytics" ? "active" : ""}`}
             href="#"
-            onClick={(e) => { e.preventDefault(); navigate("/analytics"); }}
+            onClick={(e) => { e.preventDefault(); setActiveNav("analytics"); setSidebarOpen(false); navigate("/analytics"); }}
           >
             <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>
             Analytics
@@ -402,7 +426,7 @@ export default function Dashboard() {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="user-info" onClick={() => { setIsFirstLogin(false); setShowProfile(true); }} style={{ cursor: "pointer", flex: 1 }} title="Edit profile">
+          <div className="user-info" onClick={() => { setIsFirstLogin(false); setShowProfile(true); setSidebarOpen(false); }} style={{ cursor: "pointer", flex: 1 }} title="Edit profile">
             <div className="sidebar-avatar">
               {profile?.avatarBase64 ? (
                 <img src={profile.avatarBase64} alt="avatar" />
@@ -427,7 +451,9 @@ export default function Dashboard() {
         <div className="page-header">
           <div>
             <h1 className="page-title">Applications</h1>
-            <p className="page-subtitle">Track your job search · Spring 2026</p>
+            <p className="page-subtitle">
+              Track your job search · {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+            </p>
           </div>
           <div className="header-actions">
             <button className="btn-secondary" onClick={() => setShowParse(true)}>
@@ -487,7 +513,7 @@ export default function Dashboard() {
               <p className="empty-title">{jobs.length === 0 ? "No applications yet" : "No results found"}</p>
               <p className="empty-sub">{jobs.length === 0 ? "Start tracking your job search" : "Try adjusting your filters"}</p>
               {jobs.length === 0 && (
-                <div style={{ display: "flex", gap: 10, marginTop: "1rem" }}>
+                <div style={{ display: "flex", gap: 10, marginTop: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
                   <button className="btn-secondary" onClick={() => setShowParse(true)}>Parse job posting</button>
                   <button className="btn-primary" onClick={() => { setCreateForm(EMPTY_FORM); setShowCreate(true); }}>Add manually</button>
                 </div>
@@ -528,7 +554,6 @@ export default function Dashboard() {
             </table>
           )}
         </div>
-
       </main>
 
       {showProfile && (
