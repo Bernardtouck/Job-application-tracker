@@ -200,43 +200,44 @@ function CardSide({ content, onFlip, onLogin, onRegister }: {
 
 // ─── Main component ───────────────────────────────────────
 export default function LandingPage() {
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
+  const [lang, setLang]       = useState<"en" | "de">("en");
   const [flipping, setFlipping] = useState(false);
-  const [isDE, setIsDE]         = useState(false);
+  const [showBack, setShowBack] = useState(false);
 
   const handleFlip = () => {
     if (flipping) return;
     setFlipping(true);
     setTimeout(() => {
-      const newDE = !isDE;
-      setIsDE(newDE);
-      localStorage.setItem("lang", newDE ? "de" : "en");
-      setFlipping(false);
-    }, 700);
+      setLang((l) => {
+        const next = l === "en" ? "de" : "en";
+        localStorage.setItem("lang", next);
+        return next;
+      });
+      setShowBack((v) => !v);
+    }, 350);
+    setTimeout(() => setFlipping(false), 700);
   };
 
-  const goLogin    = (lang: string) => { localStorage.setItem("lang", lang); navigate("/login");    };
-  const goRegister = (lang: string) => { localStorage.setItem("lang", lang); navigate("/register"); };
+  const content = CONTENT[lang];
 
   return (
     <div className="lp-scene">
-      <div className={`lp-card ${flipping ? (isDE ? "lp-card--unflip" : "lp-card--flip") : ""} ${isDE ? "lp-card--flipped" : ""}`}>
-        {/* Front — always EN */}
+      <div className={`lp-card ${flipping ? "lp-card--flipping" : ""} ${showBack ? "lp-card--flipped" : ""}`}>
         <div className="lp-card-front">
           <CardSide
-            content={CONTENT.en}
+            content={content}
             onFlip={handleFlip}
-            onLogin={() => goLogin("en")}
-            onRegister={() => goRegister("en")}
+            onLogin={() => { localStorage.setItem("lang", lang); navigate("/login"); }}
+            onRegister={() => { localStorage.setItem("lang", lang); navigate("/register"); }}
           />
         </div>
-        {/* Back — always DE */}
         <div className="lp-card-back">
           <CardSide
-            content={CONTENT.de}
+            content={content}
             onFlip={handleFlip}
-            onLogin={() => goLogin("de")}
-            onRegister={() => goRegister("de")}
+            onLogin={() => { localStorage.setItem("lang", lang); navigate("/login"); }}
+            onRegister={() => { localStorage.setItem("lang", lang); navigate("/register"); }}
           />
         </div>
       </div>
