@@ -214,20 +214,20 @@ export default function AuthPage() {
           </h1>
           <p className="auth-big-sub">{t.bigSub}</p>
         </div>
-
-        <div className="auth-stats">
-          <div className="auth-stat-item">
-            <span className="auth-stat-val">EN</span>
-            <span className="auth-stat-lbl">{t.statEn}</span>
-          </div>
-          <div className="auth-stat-item">
-            <span className="auth-stat-val">DE</span>
-            <span className="auth-stat-lbl">{t.statDe}</span>
-          </div>
-          <div className="auth-stat-item">
-            <span className="auth-stat-val">OCR</span>
-            <span className="auth-stat-lbl">{t.statOcr}</span>
-          </div>
+      </div>
+      {/* ── Stats — direct child of auth-shell for CSS order ── */}
+      <div className="auth-stats">
+        <div className="auth-stat-item">
+          <span className="auth-stat-val">EN</span>
+          <span className="auth-stat-lbl">{t.statEn}</span>
+        </div>
+        <div className="auth-stat-item">
+          <span className="auth-stat-val">DE</span>
+          <span className="auth-stat-lbl">{t.statDe}</span>
+        </div>
+        <div className="auth-stat-item">
+          <span className="auth-stat-val">OCR</span>
+          <span className="auth-stat-lbl">{t.statOcr}</span>
         </div>
       </div>
 
