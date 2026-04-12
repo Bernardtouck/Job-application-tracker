@@ -113,6 +113,16 @@
   border-radius: 0 2px 2px 0;
 }
 
+.ap-nav-section {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 8px 8px 4px;
+  margin-top: 4px;
+}
+
 .ap-sidebar-footer {
   border-top: 1px solid var(--border);
   padding: 14px 8px;
