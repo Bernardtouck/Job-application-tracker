@@ -8,10 +8,7 @@ import type { ParsedJob } from "../types/parser.types";
 import type { UserProfile } from "../types/user.types";
 import ProfileModal from "../components/ProfileModal";
 import "./Dashboard.css";
-import {
-  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-} from "recharts";
+
 
 interface JobFormData {
   company: string; position: string; status: JobStatus;
@@ -261,83 +258,6 @@ function JobForm({ initial, onSubmit, onCancel, loading }: {
   );
 }
 
-// ─── Analytics Section ───────────────────────────────
-const STATUS_COLORS: Record<string, string> = {
-  APPLIED:   "#5B8FD4",
-  INTERVIEW: "#EF9F27",
-  OFFER:     "#3DBE7A",
-  REJECTED:  "#E24B4A",
-};
-
-function AnalyticsSection({ jobs }: { jobs: Job[] }) {
-  const donutData = STATUSES
-    .map((s) => ({ name: s, value: jobs.filter((j) => j.status === s).length, color: STATUS_COLORS[s] }))
-    .filter((d) => d.value > 0);
-
-  const monthMap: Record<string, number> = {};
-  jobs.forEach((j) => {
-    const d = new Date(j.appliedAt);
-    const key = d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
-    monthMap[key] = (monthMap[key] || 0) + 1;
-  });
-  const barData = Object.entries(monthMap).map(([month, count]) => ({ month, count })).slice(-6);
-  const isEmpty = jobs.length === 0;
-
-  return (
-    <div className="analytics-section" id="analytics">
-      <div className="analytics-header">
-        <h2 className="analytics-title">Analytics</h2>
-        <span className="analytics-subtitle">{jobs.length} total applications</span>
-      </div>
-      <div className="analytics-grid">
-        <div className="analytics-card">
-          <div className="analytics-card-title">Status breakdown</div>
-          {isEmpty ? (
-            <div className="analytics-empty">No data yet</div>
-          ) : (
-            <>
-              <ResponsiveContainer width="100%" height={160}>
-                <PieChart>
-                  <Pie data={donutData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value" strokeWidth={0}>
-                    {donutData.map((entry, i) => <Cell key={i} fill={entry.color} opacity={0.9} />)}
-                  </Pie>
-                  <Tooltip contentStyle={{ background: "#1a1610", border: "1px solid rgba(245,166,35,0.16)", borderRadius: 8, fontSize: 12, color: "#F2EDE4" }}
-                    formatter={(value: any, name: any) => [value, String(name).charAt(0) + String(name).slice(1).toLowerCase()]} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="donut-legend">
-                {donutData.map((d) => (
-                  <div key={d.name} className="legend-item">
-                    <div className="legend-dot" style={{ background: d.color }} />
-                    <span>{d.name.charAt(0) + d.name.slice(1).toLowerCase()}</span>
-                    <span className="legend-count">{d.value}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-        <div className="analytics-card">
-          <div className="analytics-card-title">Applications over time</div>
-          {isEmpty || barData.length === 0 ? (
-            <div className="analytics-empty">No data yet</div>
-          ) : (
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={barData} barSize={28} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(245,166,35,0.07)" vertical={false} />
-                <XAxis dataKey="month" tick={{ fill: "#4A4236", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: "#4A4236", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "#1a1610", border: "1px solid rgba(245,166,35,0.16)", borderRadius: 8, fontSize: 12, color: "#F2EDE4" }}
-                  cursor={{ fill: "rgba(245,166,35,0.05)" }} formatter={(value: any) => [value, "Applications"]} />
-                <Bar dataKey="count" fill="#F5A623" radius={[4, 4, 0, 0]} opacity={0.85} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── Main Dashboard ───────────────────────────────────
 export default function Dashboard() {
@@ -609,7 +529,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        <AnalyticsSection jobs={jobs} />
       </main>
 
       {showProfile && (
