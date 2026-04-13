@@ -40,6 +40,50 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* ─── Mobile topbar (hidden on desktop) ─────────────── */
+.ap-mobile-topbar {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 60;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+ 
+.ap-mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-disp);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+ 
+.ap-mobile-brand span { color: var(--amber); }
+ 
+.ap-mobile-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border-md);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+ 
+.ap-mobile-back svg { width: 14px; height: 14px; }
+.ap-mobile-back:hover { background: var(--bg-hover); color: var(--text-primary); }
+ 
 /* ─── Sidebar ────────────────────────────────────────── */
 .ap-sidebar {
   width: var(--sidebar-w);
@@ -53,7 +97,7 @@
   z-index: 50;
   padding: 0 12px;
 }
-
+ 
 .ap-brand {
   display: flex;
   align-items: center;
@@ -62,16 +106,16 @@
   border-bottom: 1px solid var(--border);
   margin-bottom: 8px;
 }
-
+ 
 .ap-brand-name {
   font-family: var(--font-disp);
   font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
 }
-
+ 
 .ap-brand-name span { color: var(--amber); }
-
+ 
 .ap-nav {
   flex: 1;
   display: flex;
@@ -79,7 +123,7 @@
   gap: 2px;
   padding-bottom: 1rem;
 }
-
+ 
 .ap-nav-item {
   display: flex;
   align-items: center;
@@ -93,16 +137,16 @@
   transition: background 0.15s, color 0.15s;
   position: relative;
 }
-
+ 
 .ap-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
 .ap-nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
-
+ 
 .ap-nav-item.active {
   background: var(--amber-dim);
   color: var(--amber);
   font-weight: 500;
 }
-
+ 
 .ap-nav-item.active::before {
   content: '';
   position: absolute;
@@ -112,7 +156,7 @@
   background: var(--amber);
   border-radius: 0 2px 2px 0;
 }
-
+ 
 .ap-nav-section {
   font-size: 10px;
   font-weight: 600;
@@ -122,7 +166,7 @@
   padding: 8px 8px 4px;
   margin-top: 4px;
 }
-
+ 
 .ap-sidebar-footer {
   border-top: 1px solid var(--border);
   padding: 14px 8px;
@@ -130,9 +174,9 @@
   align-items: center;
   gap: 8px;
 }
-
+ 
 .ap-user { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-
+ 
 .ap-avatar {
   width: 32px; height: 32px;
   border-radius: 50%;
@@ -142,13 +186,12 @@
   overflow: hidden; flex-shrink: 0;
   font-size: 11px; font-weight: 700; color: var(--amber);
 }
-
+ 
 .ap-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
 .ap-user-info { display: flex; flex-direction: column; min-width: 0; }
 .ap-user-name  { font-size: 12px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ap-user-email { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
+ 
 .ap-logout {
   width: 28px; height: 28px;
   border-radius: 6px;
@@ -160,10 +203,10 @@
   transition: background 0.15s, color 0.15s;
   flex-shrink: 0;
 }
-
+ 
 .ap-logout svg { width: 14px; height: 14px; }
 .ap-logout:hover { background: rgba(226,75,74,0.12); color: var(--red); }
-
+ 
 /* ─── Main ───────────────────────────────────────────── */
 .ap-main {
   flex: 1;
@@ -171,7 +214,7 @@
   padding: 0;
   overflow-x: hidden;
 }
-
+ 
 /* ─── Hero ───────────────────────────────────────────── */
 .ap-hero {
   display: grid;
@@ -184,8 +227,7 @@
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
 }
-
-/* Ambient glow */
+ 
 .ap-hero::before {
   content: '';
   position: absolute;
@@ -194,7 +236,7 @@
   background: radial-gradient(circle, rgba(245,166,35,0.07) 0%, transparent 70%);
   pointer-events: none;
 }
-
+ 
 .ap-hero::after {
   content: '';
   position: absolute;
@@ -203,13 +245,13 @@
   background: radial-gradient(circle, rgba(61,190,122,0.05) 0%, transparent 70%);
   pointer-events: none;
 }
-
+ 
 .ap-hero-left {
   position: relative;
   z-index: 2;
   animation: fadeUp 0.6s var(--ease) both;
 }
-
+ 
 .ap-hero-badge {
   display: inline-flex;
   align-items: center;
@@ -224,7 +266,7 @@
   letter-spacing: 0.05em;
   margin-bottom: 1.5rem;
 }
-
+ 
 .ap-hero-badge::before {
   content: '';
   width: 6px; height: 6px;
@@ -232,22 +274,19 @@
   background: var(--amber);
   animation: pulse 2s ease-in-out infinite;
 }
-
+ 
 .ap-hero-title {
   font-family: var(--font-disp);
-  font-size: clamp(42px, 5vw, 64px);
+  font-size: clamp(36px, 4vw, 64px);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -2px;
   color: var(--text-primary);
   margin: 0 0 1rem;
 }
-
-.ap-hero-title span {
-  color: var(--amber);
-  font-style: italic;
-}
-
+ 
+.ap-hero-title span { color: var(--amber); font-style: italic; }
+ 
 .ap-hero-sub {
   font-size: 15px;
   color: var(--text-secondary);
@@ -255,13 +294,13 @@
   font-weight: 300;
   margin-bottom: 2rem;
 }
-
+ 
 .ap-hero-chips {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
-
+ 
 .stat-chip {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -272,7 +311,7 @@
   gap: 3px;
   animation: fadeUp 0.5s var(--ease) 0.2s both;
 }
-
+ 
 .stat-chip-val {
   font-family: var(--font-disp);
   font-size: 22px;
@@ -280,14 +319,14 @@
   line-height: 1;
   letter-spacing: -0.5px;
 }
-
+ 
 .stat-chip-lbl {
   font-size: 11px;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-
+ 
 .ap-hero-right {
   display: flex;
   justify-content: center;
@@ -295,7 +334,7 @@
   position: relative;
   z-index: 2;
 }
-
+ 
 /* ─── Logo Arc ───────────────────────────────────────── */
 .arc-container {
   position: relative;
@@ -303,8 +342,7 @@
   height: 440px;
   flex-shrink: 0;
 }
-
-/* Decorative rings */
+ 
 .arc-ring {
   position: absolute;
   border-radius: 50%;
@@ -312,17 +350,16 @@
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
 }
-
+ 
 .arc-ring-1 { width: 280px; height: 280px; border-color: rgba(245,166,35,0.12); animation: ringPulse 4s ease-in-out infinite; }
 .arc-ring-2 { width: 350px; height: 350px; border-color: rgba(245,166,35,0.07); animation: ringPulse 4s ease-in-out 0.5s infinite; }
 .arc-ring-3 { width: 420px; height: 420px; border-color: rgba(245,166,35,0.04); animation: ringPulse 4s ease-in-out 1s infinite; }
-
+ 
 @keyframes ringPulse {
   0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   50%       { opacity: 0.6; transform: translate(-50%, -50%) scale(1.02); }
 }
-
-/* Center photo */
+ 
 .arc-center {
   position: absolute;
   top: 50%; left: 50%;
@@ -334,27 +371,13 @@
   z-index: 2;
   box-shadow: 0 0 0 6px rgba(245,166,35,0.1), 0 20px 40px rgba(0,0,0,0.5);
 }
-
-.arc-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  filter: brightness(0.95) saturate(1.05);
-}
-
-.arc-center-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(245,166,35,0.15), transparent 60%);
-}
-
-/* Orbiting logos */
+ 
+.arc-photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.arc-center-glow { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(245,166,35,0.15), transparent 60%); }
+ 
 .arc-logo {
   position: absolute;
-  width: 48px;
-  height: 48px;
+  width: 48px; height: 48px;
   transform: translate(-50%, -50%);
   background: var(--bg-elevated);
   border: 1px solid var(--border-md);
@@ -365,32 +388,29 @@
   padding: 10px;
   z-index: 3;
   animation: logoFloat 3s ease-in-out infinite, logoIn 0.6s var(--ease) both;
-  box-shadow:
-    0 4px 16px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(245,166,35,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,166,35,0.06);
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: default;
 }
-
+ 
 .arc-logo:hover {
   transform: translate(-50%, -50%) scale(1.2);
   box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 2px var(--border-md);
   z-index: 10;
 }
-
+ 
 .arc-logo svg { width: 24px; height: 24px; }
-
+ 
 @keyframes logoFloat {
   0%, 100% { transform: translate(-50%, -50%) translateY(0); }
   50%       { transform: translate(-50%, -50%) translateY(-5px); }
 }
-
+ 
 @keyframes logoIn {
   from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
   to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
-
+ 
 /* ─── Charts ─────────────────────────────────────────── */
 .ap-charts {
   display: grid;
@@ -398,7 +418,7 @@
   gap: 16px;
   padding: 2rem 3rem 3rem;
 }
-
+ 
 .ap-chart-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -406,10 +426,7 @@
   padding: 20px;
   animation: fadeUp 0.4s var(--ease) both;
 }
-
-.ap-chart-card--sm { grid-column: span 1; }
-.ap-chart-card--lg { grid-column: span 1; }
-
+ 
 .ap-chart-title {
   font-size: 11px;
   font-weight: 600;
@@ -418,15 +435,9 @@
   color: var(--text-muted);
   margin-bottom: 1rem;
 }
-
-/* ─── Legend ─────────────────────────────────────────── */
-.ap-legend {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-top: 0.75rem;
-}
-
+ 
+.ap-legend { display: flex; flex-direction: column; gap: 7px; margin-top: 0.75rem; }
+ 
 .ap-legend-item {
   display: flex;
   align-items: center;
@@ -434,41 +445,14 @@
   font-size: 12px;
   color: var(--text-secondary);
 }
-
-.ap-legend-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.ap-legend-count {
-  margin-left: auto;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 13px;
-}
-
-/* ─── Heatmap ────────────────────────────────────────── */
-.ap-heatmap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.ap-heatmap-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.ap-heatmap-day {
-  font-size: 11px;
-  color: var(--text-muted);
-  width: 28px;
-  flex-shrink: 0;
-}
-
+ 
+.ap-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ap-legend-count { margin-left: auto; font-weight: 600; color: var(--text-primary); font-size: 13px; }
+ 
+.ap-heatmap { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.ap-heatmap-row { display: flex; align-items: center; gap: 10px; }
+.ap-heatmap-day { font-size: 11px; color: var(--text-muted); width: 28px; flex-shrink: 0; }
+ 
 .ap-heatmap-bar-wrap {
   flex: 1;
   height: 8px;
@@ -476,32 +460,12 @@
   border-radius: 4px;
   overflow: hidden;
 }
-
-.ap-heatmap-bar {
-  height: 100%;
-  background: var(--amber);
-  border-radius: 4px;
-  transition: width 0.6s var(--ease);
-  min-width: 2px;
-}
-
-.ap-heatmap-count {
-  font-size: 11px;
-  color: var(--text-muted);
-  width: 16px;
-  text-align: right;
-}
-
-.ap-heatmap-hint {
-  font-size: 12px;
-  color: var(--text-secondary);
-  text-align: center;
-  margin-top: 4px;
-}
-
+ 
+.ap-heatmap-bar { height: 100%; background: var(--amber); border-radius: 4px; transition: width 0.6s var(--ease); min-width: 2px; }
+.ap-heatmap-count { font-size: 11px; color: var(--text-muted); width: 16px; text-align: right; }
+.ap-heatmap-hint { font-size: 12px; color: var(--text-secondary); text-align: center; margin-top: 4px; }
 .ap-heatmap-hint strong { color: var(--amber); }
-
-/* ─── Loading / Empty ────────────────────────────────── */
+ 
 .ap-loading, .ap-empty {
   display: flex;
   flex-direction: column;
@@ -512,7 +476,7 @@
   color: var(--text-secondary);
   font-size: 14px;
 }
-
+ 
 .ap-spinner {
   width: 36px; height: 36px;
   border: 3px solid var(--border);
@@ -520,7 +484,7 @@
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
-
+ 
 .ap-btn {
   background: var(--amber);
   color: #0a0805;
@@ -533,31 +497,86 @@
   cursor: pointer;
   transition: opacity 0.15s;
 }
-
+ 
 .ap-btn:hover { opacity: 0.88; }
-
-/* ─── Animations ─────────────────────────────────────── */
+ 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
+ 
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: 0.5; transform: scale(0.8); }
 }
-
+ 
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ─── Responsive ─────────────────────────────────────── */
-@media (max-width: 1100px) {
-  .ap-hero { grid-template-columns: 1fr; }
-  .ap-hero-right { display: none; }
-  .ap-charts { grid-template-columns: 1fr; padding: 1.5rem; }
+ 
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+ 
+/* ── 1280px ── */
+@media (max-width: 1280px) {
+  .ap-hero { padding: 2.5rem 2rem 2rem; }
+  .ap-charts { padding: 1.5rem 2rem 2rem; }
+  .arc-container { width: 380px; height: 380px; }
 }
-
-@media (max-width: 680px) {
+ 
+/* ── 1100px — arc masqué, hero 1 colonne ── */
+@media (max-width: 1100px) {
+  .ap-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 2.5rem 2rem;
+  }
+  .ap-hero-right { display: none; }
+  .ap-charts {
+    grid-template-columns: 1fr 1fr;
+    padding: 1.5rem 2rem 2rem;
+  }
+  .ap-hero-title { font-size: clamp(36px, 5vw, 56px); }
+}
+ 
+/* ── 900px — charts 1 colonne ── */
+@media (max-width: 900px) {
+  .ap-charts { grid-template-columns: 1fr; padding: 1.25rem 1.5rem 2rem; }
+  .ap-hero-chips { gap: 8px; }
+  .stat-chip { padding: 10px 14px; }
+  .stat-chip-val { font-size: 18px; }
+}
+ 
+/* ── 768px — sidebar → topbar ── */
+@media (max-width: 768px) {
   .ap-sidebar { display: none; }
-  .ap-main { margin-left: 0; }
-  .ap-hero { padding: 2rem 1.25rem; }
+  .ap-mobile-topbar { display: flex; }
+ 
+  .ap-main {
+    margin-left: 0;
+    padding-top: 56px;
+  }
+ 
+  .ap-hero { padding: 2rem 1.25rem 1.5rem; }
+  .ap-hero-badge { font-size: 11px; padding: 4px 12px; margin-bottom: 1rem; }
+  .ap-hero-title { font-size: clamp(30px, 7vw, 48px); letter-spacing: -1.5px; margin-bottom: 0.75rem; }
+  .ap-hero-sub { font-size: 13.5px; margin-bottom: 1.5rem; }
+ 
+  .ap-charts { padding: 1rem 1.25rem 1.5rem; gap: 12px; }
+  .ap-chart-card { padding: 16px; }
+}
+ 
+/* ── 480px — mobile ── */
+@media (max-width: 480px) {
+  .ap-hero { padding: 1.5rem 1rem; }
+  .ap-hero-title { font-size: clamp(26px, 8vw, 36px); letter-spacing: -1px; }
+  .ap-hero-sub { font-size: 13px; }
+ 
+  .ap-hero-chips { gap: 6px; }
+  .stat-chip { padding: 8px 12px; border-radius: 10px; }
+  .stat-chip-val { font-size: 16px; }
+  .stat-chip-lbl { font-size: 10px; }
+ 
+  .ap-charts { padding: 0.75rem 1rem 1.5rem; gap: 10px; }
+  .ap-chart-card { padding: 14px; border-radius: 12px; }
+  .ap-chart-title { font-size: 10px; }
 }
