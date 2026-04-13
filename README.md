@@ -5,6 +5,11 @@ Built by Bernard Touck, computer science student passionate about web developmen
 
 ---
 
+## Live Demo
+**[job-application-tracker-rose-nine.vercel.app](https://job-application-tracker-rose-nine.vercel.app)**
+
+---
+
 ## Demo
 
 ![Dashboard Preview](assets/screenshots/demo.gif)
@@ -242,7 +247,7 @@ Open [http://localhost:5173](http://localhost:5173)
  
 ## Roadmap
  
-- [ ] Deploy frontend (Vercel) + backend (Railway)
+- [x] Deploy frontend (Vercel) + backend (Railway)
 - [ ] Improve DE city detection in OCR mode
 - [ ] Export applications to CSV
 - [ ] Email reminders for interview dates
