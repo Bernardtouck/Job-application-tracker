@@ -14,7 +14,7 @@ const CONTENT = {
     features: [
       { icon: "⚡", title: "Smart parsing", desc: "Paste any job description and watch the fields fill themselves." },
       { icon: "📸", title: "OCR screenshots", desc: "Upload a job posting image. We extract everything via Tesseract." },
-      { icon: <><img src="https://flagcdn.com/de.svg" width="20" alt="DE"/> <img src="https://flagcdn.com/gb.svg" width="20" alt="GB"/></>, title: "EN & DE support", desc: "Understands English and German job postings natively." },
+      { icon: <><img src="https://flagcdn.com/de.svg" width="25" alt="DE"/> <img src="https://flagcdn.com/gb.svg" width="25" alt="GB"/></>, title: "EN & DE support", desc: "Understands English and German job postings natively." },
     ],
     about: "Hi, I'm", name: "Bernard Touck",
     role: "Computer Science Student · Web Dev & AI Enthusiast",
@@ -36,7 +36,7 @@ const CONTENT = {
     features: [
       { icon: "⚡", title: "Intelligentes Parsing", desc: "Füge eine Stellenbeschreibung ein und sieh, wie sich die Felder automatisch füllen." },
       { icon: "📸", title: "OCR-Screenshots", desc: "Lade ein Bild einer Stellenanzeige hoch. Wir extrahieren alles via Tesseract." },
-      { icon: <><img src="https://flagcdn.com/de.svg" width="20" alt="DE"/> <img src="https://flagcdn.com/gb.svg" width="20" alt="GB"/></>, title: "EN & DE Unterstützung", desc: "Versteht englische und deutsche Stellenanzeigen von Natur aus." },
+      { icon: <><img src="https://flagcdn.com/de.svg" width="25" alt="DE"/> <img src="https://flagcdn.com/gb.svg" width="25" alt="GB"/></>, title: "EN & DE Unterstützung", desc: "Versteht englische und deutsche Stellenanzeigen von Natur aus." },
     ],
     about: "Hallo, ich bin", name: "Bernard Touck",
     role: "Informatikstudent · Web-Entwicklung & KI-Enthusiast",
