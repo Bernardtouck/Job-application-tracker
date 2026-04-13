@@ -1,6 +1,11 @@
 {
+  "name": "job-tracker-server",
+  "version": "1.0.0",
   "scripts": {
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
