@@ -25,7 +25,8 @@ This application centralizes the process by allowing users to:
 - **Automatically extract structured data from job postings**
 - Parse job posting screenshots via OCR
 - Manage a user profile with avatar and username
-- Monitor success and rejection rates in real time
+- Monitor success rates in real time
+- **Analytics dashboard** with status breakdown, monthly activity, response rate curve and day-of-week heatmap
  
 The application follows a **client–server architecture** and REST API best practices.
 
@@ -108,6 +109,7 @@ The application follows a **client–server architecture**:
 - [TypeScript](https://www.typescriptlang.org/) — Type-safe JavaScript
 - [React Router](https://reactrouter.com/) — Client-side routing and navigation
 - [Axios](https://axios-http.com/) — HTTP client with JWT interceptors
+- [Recharts](https://recharts.org/) — Chart library for analytics visualizations
 - [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque) + [DM Sans](https://fonts.google.com/specimen/DM+Sans) — Typography
 - [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) — Dark organic amber design system
 
