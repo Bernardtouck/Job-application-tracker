@@ -48,6 +48,7 @@ The application follows a **client–server architecture** and REST API best pra
   - Work mode (on-site, hybrid, remote)
 - Automatic application date assignment
 - User-owned job applications (secure & isolated)
+- **Rate limiting** on authentication routes (10 attempts / 5 minutes per IP)
 
 ---
 
@@ -162,8 +163,8 @@ job-application-tracker/
 
 ```bash
 # Auth & Profile
-POST   /users              # Register — public
-POST   /auth/login         # Login → JWT — public
+POST   /users              # Register — public 🛡️ rate limited
+POST   /auth/login         # Login → JWT — public 🛡️ rate limited
 GET    /users/profile      # Get profile — 🔒 JWT
 PUT    /users/profile      # Update username / avatar — 🔒 JWT
 
@@ -239,6 +240,7 @@ Open [http://localhost:5173](http://localhost:5173)
  
 - Layered REST API architecture — controllers → services → Prisma
 - JWT authentication with client-side expiry detection
+- API security with rate limiting to prevent brute force attacks
 - Building a multi-layer NLP extraction engine without external AI APIs
 - Tesseract OCR integration with EN+DE language models and artifact cleaning
 - PostgreSQL + Prisma ORM with migrations
